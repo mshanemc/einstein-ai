@@ -5,7 +5,7 @@ Docs are here:
 http://docs.metamind.io/docs/introduction-to-the-einstein-predictive-vision-service
 
 ## Goal of this project
-* Access the predictive vision without writing code
+* Access the predictive vision in Salesforce without writing code
 
 ### User creates a model and labels using Salesforce objects
 
@@ -42,6 +42,10 @@ You can get the token by looking in the browser console of the Model record in S
 ### Using Standard Models
 * For the food model, set the `Einstein Trained Model Id` to `FoodImageClassifier`
 * For the general model, set the `Einstein Trained Model Id` to `GeneralImageClassifier`
+
+### Fun things to do
+* be sure to walk around with Salesforce 1 attaching photos to a model of anything around.
+* Have Einstein idenfity dog breeds
 
 ### Known issues
 There's a button to kick off the model training, but it always seems to return a 403/forbidden.  Kick off model training via Postman or similar API-calling tool.  You can use the token from the model's Salesforce record page.
