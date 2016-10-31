@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>*</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
+        <members>Predictive_Vision_Lightning</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>EinsteinVision__c</members>
+        <members>Label__c</members>
+        <members>VisionModel__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>VisionModel__c-Vision Model Layout</members>
+        <name>Layout</name>
+    </types>
+    <version>37.0</version>
+</Package>

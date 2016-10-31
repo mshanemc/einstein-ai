@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <description>defines credentials and endpoints for the predictive vision service</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>CertName__c</fullName>
+        <description>the Salesforce name of your security certificate</description>
+        <externalId>false</externalId>
+        <inlineHelpText>the Salesforce name of your security certificate</inlineHelpText>
+        <label>CertName</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>EinsteinUsername__c</fullName>
+        <description>username (probably an email address) that you used to sign up for the Eintstein predictive vision service</description>
+        <externalId>false</externalId>
+        <inlineHelpText>username (probably an email address) that you used to sign up for the Eintstein predictive vision service</inlineHelpText>
+        <label>EinsteinUsername</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>LocalEinsteinUser__c</fullName>
+        <description>the salesforce userid (not username) of the user that you want to respond as Einstein</description>
+        <externalId>false</externalId>
+        <inlineHelpText>the salesforce userid (not username) of the user that you want to respond as Einstein</inlineHelpText>
+        <label>LocalEinsteinUser</label>
+        <length>18</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>TokenExpirationTime__c</fullName>
+        <defaultValue>3600</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>how long should the token (JWT) be valid for?</inlineHelpText>
+        <label>TokenExpirationTime</label>
+        <precision>18</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>certificateIssuer__c</fullName>
+        <description>issuer domain for the certificate you created.  Default instructions have this going to developer.force.com</description>
+        <externalId>false</externalId>
+        <label>certificateIssuer</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>EinsteinVision</label>
+    <visibility>Public</visibility>
+</CustomObject>
