@@ -29,11 +29,9 @@ http://docs.metamind.io/docs/introduction-to-the-einstein-predictive-vision-serv
 ```
 where the three parameters are the `token`, the `labelId`, and the `modelId`.
 
-This script will take every image in the user's current directory and upload it to that indicated label. Notice that the script is in some other place, and the current directory only has the images in it.
+After you create a model and some labels, click on a label to view the label-specific terminal command to run, including a valid token.  You're welcome!
 
-You can get the token by looking in the browser console of the Model record in Salesforce.
-
-After you create a model and some labels, click on a label to view the label-specific terminal command to run.
+This directoryUploader will take every image in the user's current directory and upload it to that indicated label. Notice that the script is in some other place, and the current directory only has the images in it.
 
 ### Custom Settings
 
