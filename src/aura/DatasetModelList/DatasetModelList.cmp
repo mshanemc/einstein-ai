@@ -1,0 +1,41 @@
+<aura:component implements="force:hasRecordId,flexipage:availableForAllPageTypes" controller="Vision">
+
+	
+	<aura:attribute name="models" type="object" />
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	
+	<!-- show models for this dataset -->
+	<aura:if isTrue="{!v.models}">
+		<lightning:card title="All Models">
+			<table class="slds-table slds-table--bordered slds-table--cell-buffer">
+				<thead>
+					<tr class="slds-text-title--caps">
+						<th scope="col">
+							<div class="slds-truncate" title="ID">ID</div>
+						</th>
+						<th scope="col">
+							<div class="slds-truncate" title="Created">Created</div>
+						</th>
+						<th scope="col">
+							<div class="slds-truncate" title="Status">Status</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<aura:iteration items="{!v.models.data}" var="model">
+						<tr>
+							<td>{!model.modelId}</td>
+							<td><ui:outputDateTime value="{!model.createdAt}"/></td>
+							<td>{!model.status}&nbsp;{!model.failureMsg}</td>							
+						</tr>
+					</aura:iteration>
+				</tbody>
+			</table>
+		</lightning:card>
+	</aura:if>
+	
+	
+
+
+</aura:component>

@@ -33,6 +33,8 @@ This script will take every image in the user's current directory and upload it 
 
 You can get the token by looking in the browser console of the Model record in Salesforce.
 
+After you create a model and some labels, click on a label to view the label-specific terminal command to run.
+
 ### Custom Settings
 
 * Manage your Einstein Credentials
@@ -46,7 +48,4 @@ You can get the token by looking in the browser console of the Model record in S
 ### Fun things to do
 * be sure to walk around with Salesforce 1 attaching photos to a model of anything around.
 * Have Einstein idenfity dog breeds
-
-### Known issues
-There's a button to kick off the model training, but it always seems to return a 403/forbidden.  Kick off model training via Postman or similar API-calling tool.  You can use the token from the model's Salesforce record page.
 

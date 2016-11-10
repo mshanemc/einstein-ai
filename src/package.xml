@@ -31,8 +31,18 @@
         <name>FlexiPage</name>
     </types>
     <types>
+        <members>Label__c-Vision Label Layout</members>
         <members>VisionModel__c-Vision Model Layout</members>
         <name>Layout</name>
     </types>
-    <version>37.0</version>
+    <types>
+        <members>VisionModel__c.Create_Label</members>
+        <members>VisionModel__c.Train</members>
+        <name>QuickAction</name>
+    </types>
+    <types>
+        <members>MetamindAPI</members>
+        <name>RemoteSiteSetting</name>
+    </types>
+    <version>38.0</version>
 </Package>

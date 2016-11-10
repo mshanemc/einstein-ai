@@ -21,7 +21,7 @@
             <componentName>force:detailPanel</componentName>
         </componentInstances>
         <componentInstances>
-            <componentName>DatasetModelList</componentName>
+            <componentName>LabelCurl</componentName>
         </componentInstances>
         <mode>Replace</mode>
         <name>detailTabContent</name>
@@ -96,9 +96,6 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
-            <componentName>PredictiveVisionStats</componentName>
-        </componentInstances>
-        <componentInstances>
             <componentInstanceProperties>
                 <name>tabs</name>
                 <value>sidebartabs</value>
@@ -109,9 +106,9 @@
         <name>sidebar</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Vision Model Record Page</masterLabel>
+    <masterLabel>Vision Label Record Page</masterLabel>
     <pageTemplate>flexipage:recordHomeTemplateDesktop</pageTemplate>
     <parentFlexiPage>flexipage__default_rec_L</parentFlexiPage>
-    <sobjectType>VisionModel__c</sobjectType>
+    <sobjectType>Label__c</sobjectType>
     <type>RecordPage</type>
 </FlexiPage>

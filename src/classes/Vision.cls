@@ -7,6 +7,13 @@ public static String TRAIN = VISION_API + '/train';
 public static String MODELS = VISION_API + '/models';
 public static String AUTH = 'https://api.metamind.io/v1/oauth2/token';
 
+@AuraEnabled
+public static string scriptHelper (string labelSFDCId){
+  label__c label = [select id, name, Einstein_Label_ID__c, Model__r.EinsteinID__c from label__c where id =: labelSFDCId];
+  string output = '~/WhereverYou/PutTheScript/directoryUploader.sh ' + getAccessToken() + ' ' + label.Einstein_Label_ID__c + ' ' + label.Model__r.EinsteinID__c;
+  return output;
+}
+
 @AuraEnabled 
 public static string train(string modelId){
   visionModel__c vm = [select Name, EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:modelId];
@@ -16,7 +23,7 @@ public static string train(string modelId){
   //params.put('name', EncodingUtil.urlEncode(vm.Name, 'UTF-8'));
   //params.put('datasetId', EncodingUtil.urlEncode(vm.EinsteinID__c, 'UTF-8'));
   
-  params.put('name  ', EncodingUtil.urlEncode(vm.Name, 'UTF-8'));
+  params.put('name', EncodingUtil.urlEncode(vm.Name, 'UTF-8'));
   params.put('datasetId', EncodingUtil.urlEncode(vm.EinsteinID__c, 'UTF-8'));
   
   system.debug(params);
@@ -298,6 +305,7 @@ private static List<Prediction> predictInternal(String sample, String access_tok
   }
   return predictions;
 }
+
 public static httpRequest standardRequest(string access_token, map<string, string> params, string endpoint){
   if (access_token == null){
     access_token = getAccessToken();

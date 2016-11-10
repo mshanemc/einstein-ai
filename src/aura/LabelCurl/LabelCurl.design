@@ -1,0 +1,5 @@
+<design:component label="Label Curl Cheat Sheet">
+	<sfdc:objects>
+	        <sfdc:object>Label__c</sfdc:object>
+	</sfdc:objects>
+</design:component>

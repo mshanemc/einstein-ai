@@ -68,16 +68,6 @@
 			console.log(data);
 			component.set("v.data", data);		
 		});*/
-		
-
-		var action3 = component.get("c.getAllModels")
-		action3.setParams({ "modelId" : component.get("v.recordId")});
-		action3.setCallback(this, function (a){
-			//console.log(a);
-			console.log(a.getReturnValue());
-			component.set("v.models", JSON.parse(a.getReturnValue()));		
-		});
-		$A.enqueueAction(action3);
 
 		var action4 = component.get("c.getAccessToken")
 		action4.setCallback(this, function (a){
