@@ -29,13 +29,13 @@ http://docs.metamind.io/docs/introduction-to-the-einstein-predictive-vision-serv
 ```
 where the three parameters are the `token`, the `labelId`, and the `modelId`.
 
-After you create a model and some labels, click on a label to view the label-specific terminal command to run, including a valid token.  You're welcome!
+After you create a model and some labels, click on a label to view the label-specific terminal command to run, including a valid token (#onlyInLightning).  You're welcome!
 
 This directoryUploader will take every image in the user's current directory and upload it to that indicated label. Notice that the script is in some other place, and the current directory only has the images in it.
 
 ### Users can train a model
 
-Just hit the train button on a model and the code will handle the rest.  Love those new Lightning Actions!
+Just hit the train button on a model and the code will handle the rest #onlyInLightning Love those new Lightning Actions!
 
 ### Custom Settings
 
@@ -48,6 +48,6 @@ Just hit the train button on a model and the code will handle the rest.  Love th
 * For the general model, set the `Einstein Trained Model Id` to `GeneralImageClassifier`
 
 ### Fun things to do
-* be sure to walk around with Salesforce 1 attaching photos to a model of anything around.
+* be sure to walk around with Salesforce1 attaching photos to a model of anything around.
 * Have Einstein idenfity dog breeds
 
