@@ -1,11 +1,32 @@
 # Predictive Vision Service
 
-### PVS (currently pilot) classifies photos.  
-Docs are here:
-http://docs.metamind.io/docs/introduction-to-the-einstein-predictive-vision-service
+## Basic Setup
+
+1. First, install this repo into your org.
+
+<a href="https://githubsfdeploy.herokuapp.com">
+  <img alt="Deploy to Salesforce"
+       src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png">
+</a>
+
+
+2. Create your self-signed certificate and metamind org per http://docs.metamind.io/docs/what-you-need-to-call-api . Stop where it says *Scenario*.
+3. In Salesforce, go to Custom Settings, to EinsteinVision, and then click Manage.
+4. Create a new setting at the organizational default level
+5. Set the Einstein Username you signed up with, and CertName to be the name of the cert from step 2.  
+6. Pick a userId to be the Einstein user (bonus points for having a user named Einstein and setting their chatter picture!). 
+7. token expiration time should be 3600
+8. certificate issuer: developer.force.com
+9. *Try the standard model*: In Salesforce, create a model (you can call it anything) and set the `Einstein Trained Model Id` to `GeneralImageClassifier`
+10. Post an image as a file or as a link to the Chatter feed.
+11. Click on the comment box (live feed) or reload the page to see the response
 
 ## Goal of this project
 * Access the predictive vision in Salesforce without writing code
+
+### PVS (currently pilot) classifies photos.  
+Docs are here:
+http://docs.metamind.io/docs/introduction-to-the-einstein-predictive-vision-service
 
 ### User creates a model and labels using Salesforce objects
 
@@ -51,23 +72,3 @@ Just hit the train button on a model and the code will handle the rest #onlyInLi
 * be sure to walk around with Salesforce1 attaching photos to a model of anything around.
 * Have Einstein idenfity dog breeds
 
-## Basic Setup
-
-1. First, install this repo into your org.
-
-<a href="https://githubsfdeploy.herokuapp.com">
-  <img alt="Deploy to Salesforce"
-       src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png">
-</a>
-
-
-2. Create your self-signed certificate and metamind org per http://docs.metamind.io/docs/what-you-need-to-call-api . Stop where it says *Scenario*.
-3. In Salesforce, go to Custom Settings, to EinsteinVision, and then click Manage.
-4. Create a new setting at the organizational default level
-5. Set the Einstein Username you signed up with, and CertName to be the name of the cert from step 2.  
-6. Pick a userId to be the Einstein user (bonus points for having a user named Einstein and setting their chatter picture!). 
-7. token expiration time should be 3600
-8. certificate issuer: developer.force.com
-9. *Try the standard model*: In Salesforce, create a model (you can call it anything) and set the `Einstein Trained Model Id` to `GeneralImageClassifier`
-10. Post an image as a file or as a link to the Chatter feed.
-11. Click on the comment box (live feed) or reload the page to see the response
