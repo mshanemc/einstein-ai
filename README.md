@@ -33,6 +33,10 @@ After you create a model and some labels, click on a label to view the label-spe
 
 This directoryUploader will take every image in the user's current directory and upload it to that indicated label. Notice that the script is in some other place, and the current directory only has the images in it.
 
+### Users can train a model
+
+Just hit the train button on a model and the code will handle the rest.  Love those new Lightning Actions!
+
 ### Custom Settings
 
 * Manage your Einstein Credentials
