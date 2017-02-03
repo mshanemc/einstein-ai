@@ -4,13 +4,13 @@
 
 1. First, install this repo into your org.
 
-<a href="https://githubsfdeploy.herokuapp.com">
+  <a href="https://githubsfdeploy.herokuapp.com">
   <img alt="Deploy to Salesforce"
        src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png">
-</a>
+  </a>
 
 
-2. Create your self-signed certificate and metamind org per http://docs.metamind.io/docs/what-you-need-to-call-api . Stop where it says *Scenario*.
+2. Create your self-signed certificate and metamind org per https://metamind.readme.io/docs/what-you-need-to-call-api . Stop where it says *Scenario*.
 3. In Salesforce, go to Custom Settings, to EinsteinVision, and then click Manage.
 4. Create a new setting at the organizational default level
 5. Set the Einstein Username you signed up with, and CertName to be the name of the cert from step 2.  
@@ -26,7 +26,7 @@
 
 ### PVS (currently pilot) classifies photos.  
 Docs are here:
-http://docs.metamind.io/docs/introduction-to-the-einstein-predictive-vision-service
+https://metamind.readme.io/docs/introduction-to-the-einstein-predictive-vision-service
 
 ### User creates a model and labels using Salesforce objects
 
@@ -48,7 +48,7 @@ http://docs.metamind.io/docs/introduction-to-the-einstein-predictive-vision-serv
 ```
 	~/SomeOther/Place/directoryUploader.sh c7f7d45327504236c6dfd897cbeffd42a40be485 1952 795
 ```
-where the three parameters are the `token`, the `labelId`, and the `modelId`.
+where the three parameters are the `token`, the `labelId`, and the `modelId`. Note: you will have to make the script executable, like `chmod u+x directoryUploader.sh`.
 
 After you create a model and some labels, click on a label to view the label-specific terminal command to run, including a valid token (#onlyInLightning).  You're welcome!
 
