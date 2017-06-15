@@ -4,6 +4,9 @@ labelId=$2
 datasetId=$3
 MYPWD=$(pwd)
 
+for f in *\ *; do mv "$f" "${f// /_}"; done
+for f in *\,*; do mv "$f" "${f//,/_}"; done
+
 FILES=$MYPWD/*
 for f in $FILES
 do
