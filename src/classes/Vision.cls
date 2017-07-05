@@ -1,31 +1,34 @@
 public class Vision {
 
-public static String VISION_API = 'https://api.metamind.io/v1/vision';
+public static String VISION_API = 'https://api.einstein.ai/v1/vision';
 public static String PREDICT = VISION_API + '/predict';
 public static String DATASET = VISION_API + '/datasets';
 public static String TRAIN = VISION_API + '/train';
 public static String MODELS = VISION_API + '/models';
-public static String AUTH = 'https://api.metamind.io/v1/oauth2/token';
+public static String AUTH = 'https://api.einstein.ai/v1/oauth2/token';
 
 @AuraEnabled
 public static string scriptHelper (string labelSFDCId){
   label__c label = [select id, name, Einstein_Label_ID__c, Model__r.EinsteinID__c from label__c where id =: labelSFDCId];
-  string output = '~/WhereverYou/PutTheScript/directoryUploader.sh ' + getAccessToken() + ' ' + label.Einstein_Label_ID__c + ' ' + label.Model__r.EinsteinID__c;
+  string output = getAccessToken() + ' ' + label.Einstein_Label_ID__c + ' ' + label.Model__r.EinsteinID__c;
   return output;
 }
 
-@AuraEnabled 
-public static string train(string modelId){
+@AuraEnabled
+public static string train(string modelId, integer epochs){
   visionModel__c vm = [select Name, EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:modelId];
 
   map<string, string> params = new map<string, string>();
-  
+  if (epochs != null){
+    params.put('epochs', EncodingUtil.urlEncode(string.valueOf(epochs), 'UTF-8'));
+  }
+
   //params.put('name', EncodingUtil.urlEncode(vm.Name, 'UTF-8'));
   //params.put('datasetId', EncodingUtil.urlEncode(vm.EinsteinID__c, 'UTF-8'));
-  
+
   params.put('name', EncodingUtil.urlEncode(vm.Name, 'UTF-8'));
   params.put('datasetId', EncodingUtil.urlEncode(vm.EinsteinID__c, 'UTF-8'));
-  
+
   system.debug(params);
 
   httpRequest req = Vision.standardRequest(null, params, TRAIN);
@@ -35,12 +38,12 @@ public static string train(string modelId){
   system.debug('length ' +  req.getHeader('Content-Length'));
   system.debug(req.getBody());
 
-  
+
   //testing only!!
   //req.setEndpoint('https://requestb.in/v36gq9v3');
-  
+
   Http http = new Http();
-  HTTPResponse res = http.send(req); 
+  HTTPResponse res = http.send(req);
   system.debug(res.getStatus());
   system.debug(res.getStatusCode());
 
@@ -52,29 +55,40 @@ public static string train(string modelId){
 
 }
 
-@AuraEnabled 
+@AuraEnabled
 public static string getAllModels(string modelId){
   string output;
   visionModel__c vm = [select EinsteinID__c from visionModel__c where id=:modelId];
   httpRequest req = standard(null, DATASET + '/' + vm.EinsteinID__c + '/models', 'GET');
   Http http = new Http();
-  HTTPResponse res = http.send(req); 
+  HTTPResponse res = http.send(req);
   output =  res.getBody();
   system.debug(output);
   return output;
 }
 
+@AuraEnabled
+public static string getLearningCurves(string modelId){
+  visionModel__c vm = [select EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:modelId];
+  string output;
+  httpRequest req = standard(null, MODELS + '/' + vm.Einstein_Trained_Model_Id__c + '/lc', 'GET');
+  Http http = new Http();
+  HTTPResponse res = http.send(req);
+  output =  res.getBody();
+  system.debug(output);
+  return output;
+}
 
 @AuraEnabled
 public static string getModelDetails(string modelId){
   visionModel__c vm = [select EinsteinID__c from visionModel__c where id=:modelId];
-  
+
   string output;
   //public static httpRequest standard(string access_token, string endpoint, string method){
   //https://api.metamind.io/v1/vision/models/7JXCXTRXTMNLJCEF2DR5CJ46QU
   httpRequest req = standard(null, DATASET + '/' + vm.EinsteinID__c, 'GET');
   Http http = new Http();
-  HTTPResponse res = http.send(req); 
+  HTTPResponse res = http.send(req);
   output =  res.getBody();
   system.debug(output);
   return output;
@@ -83,22 +97,22 @@ public static string getModelDetails(string modelId){
 @AuraEnabled
 public static string getModelMetrics(string modelId){
   visionModel__c vm = [select EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:modelId];
-  
+
   string output;
   //public static httpRequest standard(string access_token, string endpoint, string method){
 
   httpRequest req = standard(null, MODELS + '/' + vm.Einstein_Trained_Model_Id__c, 'GET');
   Http http = new Http();
-  HTTPResponse res = http.send(req); 
+  HTTPResponse res = http.send(req);
   output =  res.getBody();
   system.debug(output);
   return output;
 }
 
 
-@future(Callout=True) 
+@future(Callout=True)
 public static void createLabelFuture (id LabelId, string token){
-  label__c l = [select Id, Name, Einstein_Label_ID__c, Model__r.EinsteinID__c from label__c where Id =: LabelId];  
+  label__c l = [select Id, Name, Einstein_Label_ID__c, Model__r.EinsteinID__c from label__c where Id =: LabelId];
   l.Einstein_Label_ID__c = createLabel(l.Model__r.EinsteinID__c, l.Name, token);
   update l;
 }
@@ -111,10 +125,10 @@ public static string createLabel (string modelId, string labelName, String acces
 
   httpRequest req = standardRequest(null, params, DATASET + '/' + modelId + '/labels');
   Http http = new Http();
-  
+
   try{
-    HTTPResponse res = http.send(req);        
-    return ParseStrings(res, 'id');    
+    HTTPResponse res = http.send(req);
+    return ParseStrings(res, 'id');
   } catch(System.CalloutException e) {
     System.debug('ERROR:' + e);
     return null;
@@ -128,7 +142,7 @@ public static void deleteModel (string modelId, string access_token){
   HTTPResponse res = http.send(req);
 }
 
-@future(Callout=True) 
+@future(Callout=True)
 public static void createModelFuture (id ModelId, string token){
   visionModel__c vm = [select Id, Name, EinsteinID__c from visionModel__c where Id =: modelId];
   //you already got an ID?  I'm not going to overwrite it.  This supports the "standard" models
@@ -139,7 +153,7 @@ public static void createModelFuture (id ModelId, string token){
 }
 
 //optional access token, required model name.  Creates model on Einstein and returns the Id.
-public static string createModel (string modelName, String access_token){ 
+public static string createModel (string modelName, String access_token){
   map<string, string> params = new map<string, string>();
 
     params.put('name', EncodingUtil.urlEncode(modelName, 'UTF-8') );
@@ -148,13 +162,15 @@ public static string createModel (string modelName, String access_token){
   httpRequest req = standardRequest(null, params, DATASET);
   Http http = new Http();
   try{
-    HTTPResponse res = http.send(req);        
-    return ParseStrings(res, 'id');    
+    HTTPResponse res = http.send(req);
+    return ParseStrings(res, 'id');
   } catch(System.CalloutException e) {
     System.debug('ERROR:' + e);
     return null;
   }
 }
+
+
 
 @future(Callout=true)
 public static void predictChatter (id feedPostId){
@@ -162,7 +178,7 @@ public static void predictChatter (id feedPostId){
   //get feeditem
   feeditem fi = [select Id, type, HasLink, LinkUrl, ParentId, RelatedRecordId from feeditem where id=:feedPostId];
 
-  visionModel__c vm = [select Id, Einstein_Trained_Model_Id__c, Cutoff_Percentage__c, Show_alternative_classifications__c from visionModel__c where id =: fi.ParentId];
+  visionModel__c vm = [select Id, Name, Einstein_Trained_Model_Id__c, Cutoff_Percentage__c, Show_alternative_classifications__c from visionModel__c where id =: fi.ParentId];
   //url link
   list<Prediction> predictions = new list<Prediction>();
   if (fi.HasLink){
@@ -200,22 +216,22 @@ public static string buildChatterResponse (list<prediction> Predictions, decimal
   }
   if (cutoff!=null && predictions[0].probability < cutoff/100){
     return 'None of my predictions meet your threshold for confidence (' + cutoff +'%)';
-  } 
+  }
 
   comment = 'Best guess:' + predictions[0].label + ' (' + math.roundToLong(predictions[0].probability*100) + ')%.';
-  
+
   if (predictions.size()>1 && showAlternatives){
-  
+
     string extraChoices = '';
     for (integer k=1; k<predictions.size(); k++){
       if (cutoff == null || predictions[k].probability > cutoff/100){
         extraChoices=extraChoices + ' \r\n ';
-        extraChoices = extraChoices + predictions[k].label + ' (' + math.roundToLong(predictions[k].probability*100) + ')%';        
+        extraChoices = extraChoices + predictions[k].label + ' (' + math.roundToLong(predictions[k].probability*100) + ')%';
       }
-    }  
+    }
     if (extraChoices.length()>0){
-      comment = comment + ' Other possibilities: \r\n ';  
-      comment = comment + extraChoices;      
+      comment = comment + ' Other possibilities: \r\n ';
+      comment = comment + extraChoices;
     }
   }
 
@@ -251,7 +267,7 @@ public static blob makeBody(map<string, string> params){
        //last one
         form64 += HttpFormBuilder.WriteBoundary(HttpFormBuilder.EndingType.CrLf);
       } else { //not the last one
-        form64 += HttpFormBuilder.WriteBoundary();          
+        form64 += HttpFormBuilder.WriteBoundary();
       }
   }
 
@@ -261,12 +277,12 @@ public static blob makeBody(map<string, string> params){
 }
 
 //replacement for the original provided by the sample docs, but shares code with other methods
-private static List<Prediction> predictInternal(String sample, String access_token, String model, boolean isBase64) {
+public static List<Prediction> predictInternal(String sample, String access_token, String model, boolean isBase64) {
   List<Prediction> predictions = new List<Prediction>();
 
   map<string, string> params = new map<string, string>();
   params.put('modelId', EncodingUtil.urlEncode(model, 'UTF-8'));
-  
+
   if(isBase64) {
     params.put('sampleBase64Content', sample);
   } else {
@@ -337,7 +353,7 @@ public static string ParseStrings (HTTPResponse res, string field){
   system.debug(res.getBody());
   JSONParser parser = JSON.createParser(res.getBody());
   while (parser.nextToken() != null) {
-          if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+          if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) &&
               (parser.getText() == field)) {
                 // Get the value.
                 parser.nextToken();
@@ -375,9 +391,9 @@ public static String getAccessToken() {
     jwt.aud = AUTH;
     jwt.exp = string.valueOf(EV.TokenExpirationTime__c);
     String access_token = JWTBearerFlow.getAccessToken(AUTH, jwt);
-    
+
     system.debug(access_token);
-    return access_token;    
+    return access_token;
 }
 
 
@@ -418,7 +434,7 @@ private static List<Prediction> predictInternal2(String sample, String access_to
     List<Prediction> predictions = new List<Prediction>();
     try {
           HTTPResponse res = http.send(httpRequest);
-          
+
           System.debug(res.toString());
           System.debug('STATUS:'+res.getStatus());
           System.debug('STATUS_CODE:'+res.getStatusCode());
@@ -443,7 +459,7 @@ private static List<Prediction> predictInternal2(String sample, String access_to
                   }
               }
           }
-          
+
      } catch(System.CalloutException e) {
             System.debug('ERROR:' + e);
      }

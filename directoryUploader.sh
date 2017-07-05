@@ -4,6 +4,7 @@ labelId=$2
 datasetId=$3
 MYPWD=$(pwd)
 
+# Remove any spaces or commas...typical for iOS photo names, but examples API doesn't like them
 for f in *\ *; do mv "$f" "${f// /_}"; done
 for f in *\,*; do mv "$f" "${f//,/_}"; done
 

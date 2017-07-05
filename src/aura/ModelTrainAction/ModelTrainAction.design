@@ -1,5 +1,5 @@
 <design:component label="List of Models">
-<sfdc:objects>
-        <sfdc:object>VisionModel__c</sfdc:object>
+<sfdc:objects >
+        <sfdc:object >VisionModel__c</sfdc:object>
 </sfdc:objects>
 </design:component>

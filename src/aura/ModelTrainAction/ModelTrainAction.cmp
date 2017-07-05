@@ -1,7 +1,9 @@
 <aura:component implements="force:hasRecordId,force:lightningQuickAction" controller="Vision">
-	
+
 	<aura:attribute name="modelId" type="string"/>
 	<aura:attribute name="status" type="string" required="true" default="not started"/>
+	<aura:attribute name="epochs" type="integer"/>
+
 
 	<aura:if isTrue="{!v.status == 'not started'}">
 		<div class="slds-text-heading--medium slds-m-bottom--medium">By now, you should have created some labels and run the command line scripts to put examples in each label.</div>
@@ -9,14 +11,14 @@
 		<div class="slds-text-heading--medium slds-m-bottom--medium">Clicking <b>train</b> will start the model training.  This may take a while--refresh the page to see the training status</div>
 
 		<!-- <div class="slds-text-body-regular">Once you train the model, you can no longer make examples.  You'll have to create a new model/dataset, new examples, and re-do the command line scripts</div> -->
-
-		<lightning:button variant="brand" label="Train" onclick="{!c.trainThis}" />
+		<lightning:input type="number" name="epochs" label="Epochs (optional)" value="{!v.epochs}" max="100" min="1"/>
+		<lightning:button variant="brand" label="Train" onclick="{!c.trainThis}" class="slds-m-vertical_medium" />
 
 	</aura:if>
 
 	<aura:if isTrue="{!v.status == 'done'}">
 		<p>
-		Your model is now training.  Refresh the page to see that statuses.  The modelId is {!v.modelId} and it's now saved to the record.  Please close this box.
+		Your model is now training.  Refresh the page to see that status.  The modelId is {!v.modelId} and it's now saved to the record.  Please close this box.
 		</p>
 	</aura:if>
 

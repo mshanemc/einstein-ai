@@ -1,0 +1,18 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" controller="EinsteinSignup">
+	
+    <aura:attribute name="firstName" type="string" access="global"/>
+    <aura:attribute name="lastName" type="string" access="global"/>
+    <aura:attribute name="email" type="string" access="global"/>
+    <aura:attribute name="username" type="string" access="global"/>
+    <aura:attribute name="status" type="string" access="global" default="none" />
+    
+    <aura:if isTrue="{!v.status == 'none'}">
+        <lightning:input name="firstName" value="{!v.firstName}" type="text" label="First Name"/>
+        <lightning:input name="lastName" value="{!v.lastName}" type="text" label="Last Name"/>
+        <lightning:input name="email" value="{!v.email}" type="text" label="Salesforce Email"/>
+        <lightning:input name="username" value="{!v.username}" type="text" label="Username"/>
+        
+        <lightning:button variant="brand" label="Sign Up" onclick="{! c.handleClick }" />
+	</aura:if>
+    
+</aura:component>

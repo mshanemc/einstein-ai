@@ -5,5 +5,6 @@
     <navType>Standard</navType>
     <tab>standard-home</tab>
     <tab>VisionModel__c</tab>
+    <tab>Language_Model__c</tab>
     <uiType>Lightning</uiType>
 </CustomApplication>
