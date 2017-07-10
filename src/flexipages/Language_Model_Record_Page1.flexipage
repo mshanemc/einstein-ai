@@ -20,8 +20,21 @@
         <componentInstances>
             <componentName>force:detailPanel</componentName>
         </componentInstances>
+        <componentInstances>
+            <componentName>DatasetInfoDisplay</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentName>DatasetModelList</componentName>
+        </componentInstances>
         <mode>Replace</mode>
         <name>detailTabContent</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentName>PredictiveVisionStats</componentName>
+        </componentInstances>
+        <name>facet-e0e6562e-fc5a-4fc3-b555-6e2348c80bed</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -48,6 +61,17 @@
             <componentInstanceProperties>
                 <name>title</name>
                 <value>Standard.Tab.detail</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:tab</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>facet-e0e6562e-fc5a-4fc3-b555-6e2348c80bed</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>title</name>
+                <value>Model Stats</value>
             </componentInstanceProperties>
             <componentName>flexipage:tab</componentName>
         </componentInstances>

@@ -43,24 +43,26 @@
 			}))
 			.then($A.getCallback(function (result){
 				console.log(result);
-				component.set("v.fields.Einstein_Dataset_Id__c", result.id);
-				component.find("frd").saveRecord(
-					$A.getCallback(function(saveResult){
-						//console.log(saveResult);
-						if (saveResult.state === "SUCCESS"){
-							//happy logic here
-							$A.get("e.force:showToast").setParams({
-								"message": result.statusMsg
-							}).fire();
-							component.find("frd").reloadRecord();
-						} else if (saveResult.state === "INCOMPLETE") {
-							console.log("User is offline, device doesn't support drafts.");
-						} else if (saveResult.state === "ERROR"){
-							component.find("leh").passErrors(saveResult.error);
-						}
-					})
-				);
-
+				if (result.id){
+					component.set("v.fields.Einstein_Dataset_Id__c", result.id);
+					component.find("frd").saveRecord(
+						$A.getCallback(function(saveResult){
+							//console.log(saveResult);
+							if (saveResult.state === "SUCCESS"){
+								//happy logic here
+								$A.get("e.force:showToast").setParams({
+									"message": "Einstein is processing your dataset"
+								}).fire();
+								component.find("frd").reloadRecord();
+								$A.get("e.force:refreshView").fire();
+							} else if (saveResult.state === "INCOMPLETE") {
+								console.log("User is offline, device doesn't support drafts.");
+							} else if (saveResult.state === "ERROR"){
+								component.find("leh").passErrors(saveResult.error);
+							}
+						})
+					);
+				}
 			}));
 	},
 

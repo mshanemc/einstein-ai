@@ -8,7 +8,10 @@ public with sharing class EinsteinLanguage {
 	public static final String RETRAIN = LANGUAGE_API + '/retrain';
 	public static final String MODELS = LANGUAGE_API + '/models';
 	public static final String DEFAULTSENTIMENT = 'CommunitySentiment';
+	public static final String FEEDBACK = LANGUAGE_API + '/feedback';
+
 	public static final String AUTH = 'https://api.einstein.ai/v2/oauth2/token';
+
 
 	public class LanguageException extends exception {}
 
@@ -76,6 +79,11 @@ public with sharing class EinsteinLanguage {
 		return JSON.serialize(output);
 	}
 
+	@future(callout=true)
+	public static void createDatasetFuture(string SFDCmodelId, string CDID){
+		createDatasetPart2(SFDCmodelId, CDID);
+	}
+
 	@AuraEnabled
 	public static string createDatasetPart2(string SFDCmodelId, string CDID){
 
@@ -140,7 +148,7 @@ public with sharing class EinsteinLanguage {
 		CD.Name = name;
 		CD.PreferencesAllowOriginalDownload = true;
 		CD.PreferencesLinkLatestVersion = true;
-		CD.ExpiryDate = system.now().addMinutes(5);
+		CD.ExpiryDate = system.now().addMinutes(60);
 		CD.PreferencesExpires = true;
 		CD.PreferencesNotifyOnVisit = false;
 		CD.PreferencesNotifyRndtnComplete = false;
@@ -189,6 +197,20 @@ public with sharing class EinsteinLanguage {
 		return csv;
 	}
 
+	public static string languageFeedback(string text, string label, string modelId, string token){
+		map<string, string> params = new map<string, string>();
+
+		params.put('modelId', EncodingUtil.urlEncode(modelId, 'UTF-8'));
+		//params.put('document', EncodingUtil.urlEncode(text, 'UTF-8'));
+		params.put('document', text);
+		params.put('expectedLabel', EncodingUtil.urlEncode(label, 'UTF-8'));
+
+		system.debug(params);
+
+		httpRequest req = Vision.standardRequest(token, params, FEEDBACK);
+
+		return Vision.requestResponse(req);
+	}
 
 	public static list<Vision.Prediction> Predict (string text){
 		return Predict(text, null, null, null);
@@ -277,4 +299,26 @@ public with sharing class EinsteinLanguage {
 
   	return predictions;
 	}
+
+	@AuraEnabled
+	public static string getLabels(id recordId){
+	  Language_Model__c lm = [select Einstein_Dataset_Id__c from Language_Model__c where id=:recordId];
+		httpRequest req = vision.standard(null, DATASET + '/' + lm.Einstein_Dataset_Id__c, 'GET');
+		Http http = new Http();
+	  HTTPResponse res = http.send(req);
+	  system.debug(res.getBody());
+	  return res.getBody();
+	}
+	//statistical display section
+	/*@AuraEnabled
+	public static string getAllModels(string recordId){
+	  string output;
+	  Language_Model__c lm = [select Einstein_Dataset_Id__c from Language_Model__c where id=:recordId];
+	  httpRequest req = vision.standard(null, DATASET + '/' + lm.Einstein_Dataset_Id__c + '/models', 'GET');
+	  Http http = new Http();
+	  HTTPResponse res = http.send(req);
+	  output =  res.getBody();
+	  system.debug(output);
+	  return output;
+	}*/
 }

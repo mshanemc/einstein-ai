@@ -8,6 +8,9 @@
 		action.setCallback(this, function (a){
 			let data = 	JSON.parse(a.getReturnValue());
 			console.log(data);
+			if (!data.data){
+				return; //we're done here
+			}
 			//will get overwritten if we get back anything useful
 
 			for (let e=0; e<data.data.length; e++){

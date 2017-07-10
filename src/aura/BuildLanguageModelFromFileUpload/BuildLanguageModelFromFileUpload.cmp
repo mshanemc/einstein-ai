@@ -11,9 +11,9 @@
 
 	<c:LightningErrorHandler aura:id="leh"/>
 
-	<lightning:card title="Create Model from Attached File">
-		<aura:if isTrue="{!v.files.length>0}">
-			<div class="slds-p-around--medium">
+	<lightning:card title="Create Dataset from Attached File">
+		<div class="slds-p-around--medium">
+			<aura:if isTrue="{!v.files.length>0}">
 				<div class="slds-m-bottom--medium">
 					<lightning:select label="Select an File" value="{!v.selectedFile}">
 						<aura:iteration items="{!v.files}" var="file">
@@ -26,16 +26,16 @@
 					<div class="slds-m-bottom--medium">
 						<lightning:buttonGroup >
 							<lightning:button variant="neutral" label="Preview" onclick="{! c.previewFile }" />
-							<lightning:button variant="brand" label="Build Model" onclick="{! c.makeModel }" />
+							<lightning:button variant="brand" label="Build Dataset" onclick="{! c.makeModel }" />
 						</lightning:buttonGroup>
 					</div>
 				</aura:if>
-				<aura:set attribute="else">
-					<p>No files attached to this record</p>
-					<p>Upload one to use for the model</p>
-				</aura:set>
-			</div>
-		</aura:if>
+			</aura:if>
+			<aura:if isTrue="{!v.files.length==0}">
+				<p>No files attached to this record</p>
+				<p>Upload one to use for the model, then refresh the page</p>
+			</aura:if>
+		</div>
 	</lightning:card>
 
 </aura:component>

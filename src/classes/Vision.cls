@@ -1,11 +1,18 @@
 public class Vision {
 
-public static String VISION_API = 'https://api.einstein.ai/v1/vision';
-public static String PREDICT = VISION_API + '/predict';
-public static String DATASET = VISION_API + '/datasets';
-public static String TRAIN = VISION_API + '/train';
-public static String MODELS = VISION_API + '/models';
-public static String AUTH = 'https://api.einstein.ai/v1/oauth2/token';
+public static final String VISION_API = 'https://api.einstein.ai/v1/vision';
+public static final String LANGUAGE_API = 'https://api.einstein.ai/v2/language';
+
+public static final String PREDICT = VISION_API + '/predict';
+public static final String DATASET = VISION_API + '/datasets';
+public static final String TRAIN = VISION_API + '/train';
+public static final String MODELS = VISION_API + '/models';
+
+public static final String DATASET_LANG = LANGUAGE_API + '/datasets';
+public static final String TRAIN_LANG = LANGUAGE_API + '/train';
+public static final String MODELS_LANG = LANGUAGE_API + '/models';
+
+public static final String AUTH = 'https://api.einstein.ai/v1/oauth2/token';
 
 @AuraEnabled
 public static string scriptHelper (string labelSFDCId){
@@ -15,32 +22,36 @@ public static string scriptHelper (string labelSFDCId){
 }
 
 @AuraEnabled
-public static string train(string modelId, integer epochs){
-  visionModel__c vm = [select Name, EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:modelId];
+public static string train(id modelId, integer epochs){
 
   map<string, string> params = new map<string, string>();
   if (epochs != null){
     params.put('epochs', EncodingUtil.urlEncode(string.valueOf(epochs), 'UTF-8'));
   }
 
-  //params.put('name', EncodingUtil.urlEncode(vm.Name, 'UTF-8'));
-  //params.put('datasetId', EncodingUtil.urlEncode(vm.EinsteinID__c, 'UTF-8'));
+  visionModel__c vm = new VisionModel__c();
+  Language_Model__c lm = new Language_Model__c();
+  httpRequest req = new httpRequest();
 
-  params.put('name', EncodingUtil.urlEncode(vm.Name, 'UTF-8'));
-  params.put('datasetId', EncodingUtil.urlEncode(vm.EinsteinID__c, 'UTF-8'));
+  if (modelId.getSObjectType().getDescribe().getName()=='VisionModel__c'){
+    vm = [select Name, EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:modelId];
+    params.put('name', EncodingUtil.urlEncode(vm.Name, 'UTF-8'));
+    params.put('datasetId', EncodingUtil.urlEncode(vm.EinsteinID__c, 'UTF-8'));
+    req = Vision.standardRequest(null, params, TRAIN);
+  } else if (modelId.getSObjectType().getDescribe().getName()=='Language_Model__c'){
+    lm = [select Name, Einstein_Dataset_Id__c, Einstein_Model_Id__c from Language_Model__c where id=:modelId];
+    params.put('name', EncodingUtil.urlEncode(lm.Name, 'UTF-8'));
+    params.put('datasetId', EncodingUtil.urlEncode(lm.Einstein_Dataset_Id__c, 'UTF-8'));
+    req = Vision.standardRequest(null, params, TRAIN_LANG);
+  }
 
   system.debug(params);
 
-  httpRequest req = Vision.standardRequest(null, params, TRAIN);
   system.debug(req);
   system.debug(req.getHeader('Authorization'));
   system.debug(req.getHeader('Content-Type'));
   system.debug('length ' +  req.getHeader('Content-Length'));
   system.debug(req.getBody());
-
-
-  //testing only!!
-  //req.setEndpoint('https://requestb.in/v36gq9v3');
 
   Http http = new Http();
   HTTPResponse res = http.send(req);
@@ -48,23 +59,28 @@ public static string train(string modelId, integer epochs){
   system.debug(res.getStatusCode());
 
   string result = ParseStrings(res, 'modelId');
-
-  vm.Einstein_Trained_Model_Id__c = result;
-  update vm;
+  if (modelId.getSObjectType().getDescribe().getName()=='VisionModel__c'){
+    vm.Einstein_Trained_Model_Id__c = result;
+    update vm;
+  } else if (modelId.getSObjectType().getDescribe().getName()=='Language_Model__c'){
+    lm.Einstein_Model_Id__c = result;
+    update lm;
+  }
   return result;
 
 }
 
 @AuraEnabled
-public static string getAllModels(string modelId){
-  string output;
-  visionModel__c vm = [select EinsteinID__c from visionModel__c where id=:modelId];
-  httpRequest req = standard(null, DATASET + '/' + vm.EinsteinID__c + '/models', 'GET');
-  Http http = new Http();
-  HTTPResponse res = http.send(req);
-  output =  res.getBody();
-  system.debug(output);
-  return output;
+public static string getAllModels(id recordId){
+  httpRequest req = new httpRequest();
+  if (recordId.getSObjectType().getDescribe().getName()=='VisionModel__c'){
+    visionModel__c vm = [select EinsteinID__c from visionModel__c where id=:recordId];
+    req = standard(null, DATASET + '/' + vm.EinsteinID__c + '/models', 'GET');
+  } else if (recordId.getSObjectType().getDescribe().getName()=='Language_Model__c'){
+    Language_Model__c lm = [select Einstein_Dataset_Id__c from Language_Model__c where id=:recordId];
+    req = vision.standard(null, DATASET_LANG + '/' + lm.Einstein_Dataset_Id__c + '/models', 'GET');
+  }
+  return requestResponse(req);
 }
 
 @AuraEnabled
@@ -72,41 +88,42 @@ public static string getLearningCurves(string modelId){
   visionModel__c vm = [select EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:modelId];
   string output;
   httpRequest req = standard(null, MODELS + '/' + vm.Einstein_Trained_Model_Id__c + '/lc', 'GET');
-  Http http = new Http();
-  HTTPResponse res = http.send(req);
-  output =  res.getBody();
-  system.debug(output);
-  return output;
+  return requestResponse(req);
 }
 
 @AuraEnabled
-public static string getModelDetails(string modelId){
-  visionModel__c vm = [select EinsteinID__c from visionModel__c where id=:modelId];
+public static string getModelDetails(id recordId){
 
-  string output;
-  //public static httpRequest standard(string access_token, string endpoint, string method){
-  //https://api.metamind.io/v1/vision/models/7JXCXTRXTMNLJCEF2DR5CJ46QU
-  httpRequest req = standard(null, DATASET + '/' + vm.EinsteinID__c, 'GET');
+  httpRequest req = new httpRequest();
+  if (recordId.getSObjectType().getDescribe().getName()=='VisionModel__c'){
+    visionModel__c vm = [select EinsteinID__c from visionModel__c where id=:recordId];
+    req = standard(null, DATASET + '/' + vm.EinsteinID__c, 'GET');
+  } else if (recordId.getSObjectType().getDescribe().getName()=='Language_Model__c'){
+    Language_Model__c lm = [select Einstein_Dataset_Id__c, Einstein_Model_Id__c  from Language_Model__c where id=:recordId];
+    req = standard(null, DATASET_LANG + '/' + lm.Einstein_Dataset_Id__c, 'GET');
+  }
+  return requestResponse(req);
+}
+
+public static string requestResponse(httpRequest req){
   Http http = new Http();
   HTTPResponse res = http.send(req);
-  output =  res.getBody();
-  system.debug(output);
-  return output;
+  system.debug(res.getBody());
+  return res.getBody();
 }
 
 @AuraEnabled
-public static string getModelMetrics(string modelId){
-  visionModel__c vm = [select EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:modelId];
+public static string getModelMetrics(id recordId){
+  httpRequest req = new httpRequest();
+  if (recordId.getSObjectType().getDescribe().getName()=='VisionModel__c'){
+    visionModel__c vm = [select EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:recordId];
+    req = standard(null, MODELS + '/' + vm.Einstein_Trained_Model_Id__c, 'GET');
+  } else if (recordId.getSObjectType().getDescribe().getName()=='Language_Model__c'){
+    Language_Model__c lm = [select Einstein_Dataset_Id__c, Einstein_Model_Id__c  from Language_Model__c where id=:recordId];
+    req = standard(null, MODELS_LANG + '/' + lm.Einstein_Model_Id__c, 'GET');
+  }
 
-  string output;
-  //public static httpRequest standard(string access_token, string endpoint, string method){
-
-  httpRequest req = standard(null, MODELS + '/' + vm.Einstein_Trained_Model_Id__c, 'GET');
-  Http http = new Http();
-  HTTPResponse res = http.send(req);
-  output =  res.getBody();
-  system.debug(output);
-  return output;
+  return requestResponse(req);
 }
 
 
@@ -265,7 +282,8 @@ public static blob makeBody(map<string, string> params){
     //form64 += HttpFormBuilder.WriteBodyParameter(key, EncodingUtil.urlEncode(params.get(key), 'UTF-8'));
     if (mapCounter==params.size()){
        //last one
-        form64 += HttpFormBuilder.WriteBoundary(HttpFormBuilder.EndingType.CrLf);
+        form64 += HttpFormBuilder.WriteBoundary(null); //suggestion from product team
+        //form64 += HttpFormBuilder.WriteBoundary(HttpFormBuilder.EndingType.CrLf);
       } else { //not the last one
         form64 += HttpFormBuilder.WriteBoundary();
       }

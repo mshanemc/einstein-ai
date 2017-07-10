@@ -1,21 +1,24 @@
 ({
 	doInit : function(component, event, helper) {
-		//public static string getModelDetails(string modelId){
-		//console.log("record Id is " + component.get("v.recordId"));
 
-		var that = this;
+		//gets and updates the UI in the background
+		helper.getModels(component);
+		//wait 5 seconds, and if there are any RUNNING/QUEUED, do it again
 
-		var action3 = component.get("c.getAllModels")
-		action3.setParams({ "modelId" : component.get("v.recordId")});
-		action3.setCallback(this, function (a){
-			//console.log(a);
-			console.log(a.getReturnValue());
-			if (a.getReturnValue()){
-				component.set("v.models", JSON.parse(a.getReturnValue()).data.reverse());
+		let loop = window.setInterval($A.getCallback(function(){
+			if (helper.shouldRetry(component)){
+				console.log("shouldRetry returned true")
+				helper.getModels(component);
+			} else {
+				console.log("shouldRetry returned false")
+				stopNow();
 			}
-		});
-		$A.enqueueAction(action3);
+		}), 5000);
 
-
+		function stopNow(){
+			console.log("in stopNow");
+			clearInterval(loop);
+		}
 	}
+
 })

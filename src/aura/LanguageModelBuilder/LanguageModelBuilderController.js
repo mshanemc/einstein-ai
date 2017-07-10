@@ -19,7 +19,7 @@
 			.then($A.getCallback(function (result){
 				console.log(result);
 				component.set("v.sourceFields", result);
-				//TODO: lodash to alphabetize that crap!
+				//TODO: lodash to alphabetize!
 			}));
 
 		let classify = component.get("c.getObjectFields");
@@ -31,7 +31,7 @@
 			.then($A.getCallback(function (result){
 				console.log(result);
 				component.set("v.classificationFields", result);
-				//TODO: lodash to alphabetize that crap!
+				//TODO: lodash to alphabetize!
 			}));
 	},
 
@@ -47,11 +47,11 @@
 			.then($A.getCallback(function (result){
 				console.log(result);
 				$A.get("e.force:showToast").setParams({
-					"message": "Refresh the chatter feed to see your file",
+					"message": "Your file is in the Chatter feed",
 					"title" : "Success!",
 					"type" : "success"
 				}).fire();
-				//TODO: lodash to alphabetize that crap!
+				$A.get("e.force:refreshView").fire();
 			}));
 	},
 
@@ -75,24 +75,28 @@
 			}))
 			.then($A.getCallback(function (result){
 				console.log(result);
-				component.set("v.fields.Einstein_Dataset_Id__c", result.id);
-				component.find("frd").saveRecord(
-					$A.getCallback(function(saveResult){
-						//console.log(saveResult);
-						if (saveResult.state === "SUCCESS"){
-							//happy logic here
-							$A.get("e.force:showToast").setParams({
-								"message": result.statusMsg
-							}).fire();
-							component.find("frd").reloadRecord();
-						} else if (saveResult.state === "INCOMPLETE") {
-							console.log("User is offline, device doesn't support drafts.");
-						} else if (saveResult.state === "ERROR"){
-							component.find("leh").passErrors(saveResult.error);
-						}
-					})
-				);
-
+				if (result.id){
+					component.set("v.fields.Einstein_Dataset_Id__c", result.id);
+					component.find("frd").saveRecord(
+						$A.getCallback(function(saveResult){
+							//console.log(saveResult);
+							if (saveResult.state === "SUCCESS"){
+								//happy logic here
+								$A.get("e.force:showToast").setParams({
+									"message": "Dataset created.  Next, Train a model from this dataset."
+								}).fire();
+								component.find("frd").reloadRecord();
+								$A.get("e.force:refreshView").fire();
+							} else if (saveResult.state === "INCOMPLETE") {
+								console.log("User is offline, device doesn't support drafts.");
+							} else if (saveResult.state === "ERROR"){
+								component.find("leh").passErrors(saveResult.error);
+							}
+						})
+					);
+				} else if (result.message) {
+					component.find("leh").passErrors(	[{"message" : result.message }] );
+				}
 			}));
 	},
 

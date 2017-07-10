@@ -17,7 +17,7 @@
 
 	<c:LightningErrorHandler aura:id="leh"/>
 
-	<lightning:card title="Create Model from Salesforce Data">
+	<lightning:card title="Create Dataset from Salesforce Data">
 		<div class="slds-p-around--medium">
 			<div class="slds-m-bottom--medium">
 				<lightning:select label="Select an Object" value="{!v.selectedObject}" onchange="{!c.getFields}">
@@ -49,7 +49,7 @@
 				<div class="">
 					<lightning:buttonGroup >
 						<lightning:button variant="neutral" label="Get File" onclick="{! c.getFile }" />
-						<lightning:button variant="brand" label="Build Model" onclick="{! c.makeModel }" />
+						<lightning:button variant="brand" label="Build Dataset" onclick="{! c.makeModel }" />
 					</lightning:buttonGroup>
 				</div>
 

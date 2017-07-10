@@ -17,6 +17,7 @@
 				console.log("Success!");
 				console.log(a.getReturnValue());
 				component.set("v.status", "done");
+				$A.get("e.force:refreshView").fire();
 				component.set("v.modelId", a.getReturnValue());
 			}  else if (state === "ERROR") {
 				console.log("Error!");

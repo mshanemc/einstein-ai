@@ -5,6 +5,7 @@
 
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
+	<aura:if isTrue="{!v.data.data}">
 		<lightning:card title="Model Epoch Details">
 
 			<table class="slds-table slds-table--bordered slds-table--cell-buffer">
@@ -61,6 +62,11 @@
 			</table>
 
 		</lightning:card>
-
+		<aura:set attribute="else">
+			<div class="slds-box slds-theme_shade">
+				<p class="slds-text-heading_medium slds-text-color_error">No learning curves were found for this model</p>
+			</div>
+		</aura:set>
+	</aura:if>
 
 </aura:component>
