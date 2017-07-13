@@ -1,5 +1,15 @@
 ({
-	trainThis : function(component, event, helper) {
+	setDefaultRetrain : function(component) {
+		if (component.get("v.fieldsv").Einstein_Model_Id__c || component.get("v.fieldsv").Einstein_Trained_Model_Id__c ){
+			component.set("v.hasModelId", true);
+			component.set("v.retrain", true);
+		}
+		if (component.get("v.fieldsv").EinsteinID__c || component.get("v.fieldsv").Einstein_Dataset_Id__c){
+			component.set("v.hasDatasetId", true);
+		}
+	},
+
+	trainThis : function(component) {
 		console.log("starting train call");
 
 		let action = component.get("c.train");

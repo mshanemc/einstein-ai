@@ -140,20 +140,22 @@ public with sharing class EinsteinLanguage {
 
 	@AuraEnabled
 	public static string createDataset(string SFDCmodelId, string obj, string src, string classify){
+
+		Language_Model__c lm = [select id, name from Language_Model__c where id=:SFDCmodelId];
 		ContentVersion CV = new ContentVersion();
 		CV.VersionData = blob.valueof(makeCSV(SFDCmodelId, obj, src, classify));
-		CV.PathOnClient = 'EinsteinTrainingFile.csv';
-		CV.Title = 'EinsteinTrainingFile';
+		CV.PathOnClient = lm.name.replace(' ', '') + '.csv';
+		CV.Title = lm.name.replace(' ', '');
 
 		insert CV;
 
-		return JSON.serialize(writeCD(CV.Id, CV.Title+'Distro'));
+		return JSON.serialize(writeCD(CV.Id, CV.Title+'GeneratedDataset'));
 	}
 
 	private static ContentDistribution writeCD(id contentVersionId, string name){
 		ContentDistribution CD = new ContentDistribution();
 		CD.ContentVersionId = contentVersionId;
-		CD.Name = name;
+		CD.Name = 'EinsteinTemp'+ name;
 		CD.PreferencesAllowOriginalDownload = true;
 		CD.PreferencesLinkLatestVersion = true;
 		CD.ExpiryDate = system.now().addMinutes(EXPIRY);
@@ -167,11 +169,12 @@ public with sharing class EinsteinLanguage {
 
 	@AuraEnabled
 	public static string saveFileToFiles(string SFDCmodelId, string obj, string src, string classify){
+		Language_Model__c lm = [select id, name from Language_Model__c where id=:SFDCmodelId];
 
 		ContentVersion CV = new ContentVersion();
 		CV.VersionData = blob.valueof(makeCSV(SFDCmodelId, obj, src, classify));
-		CV.PathOnClient = 'EinsteinTrainingFile.csv';
-		CV.Title = 'EinsteinTrainingFile';
+		CV.PathOnClient = lm.name.replace(' ', '') + '.csv';
+		CV.Title = lm.name.replace(' ', '');
 
 		insert CV;
 
