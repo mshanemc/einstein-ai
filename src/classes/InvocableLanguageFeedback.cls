@@ -28,7 +28,6 @@ public with sharing class InvocableLanguageFeedback {
 	@future(callout=true)
 	public static void giveFeedback(list<string> input){
 		string token = vision.getAccessToken();
-		list<LanguageFeedback> LFs = new list<LanguageFeedback>();
 
 		for (string s:input){
 			LanguageFeedback LF = (LanguageFeedback)JSON.deserialize(s, LanguageFeedback.class);
@@ -45,6 +44,7 @@ public with sharing class InvocableLanguageFeedback {
 
 		@InvocableVariable (required=true label='Correct Label' description='What classification should it have been?  This should be the name of a label for that model')
 		public string Label;
+
 	}
 
 	public static list<LanguageFeedback> dedupeLFs(list<LanguageFeedback> input){

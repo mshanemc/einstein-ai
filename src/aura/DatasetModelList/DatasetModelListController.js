@@ -1,6 +1,6 @@
 ({
 	doInit : function(component, event, helper) {
-
+		console.log("DatasetModelList is in Init");
 		//gets and updates the UI in the background
 		helper.getModels(component);
 		//wait 5 seconds, and if there are any RUNNING/QUEUED, do it again

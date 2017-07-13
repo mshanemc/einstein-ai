@@ -5,6 +5,8 @@
 	<aura:attribute name="done" type="boolean" default="false" />
 
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:handler event="ltng:sendMessage" action="{!c.doInit}"/>
+
 	<c:LightningErrorHandler aura:id="leh"/>
 
 	<!-- show models for this dataset -->
@@ -20,6 +22,9 @@
 							<div class="slds-truncate" title="Created">Created</div>
 						</th>
 						<th scope="col">
+							<div class="slds-truncate" title="Created">Updated</div>
+						</th>
+						<th scope="col">
 							<div class="slds-truncate" title="Status">Status</div>
 						</th>
 					</tr>
@@ -28,10 +33,17 @@
 					<aura:iteration items="{!v.models}" var="model">
 						<tr>
 							<td><div class="slds-truncate">{!model.modelId}</div></td>
-							<td><ui:outputDateTime value="{!model.createdAt}"/></td>
+							<td><ui:outputDateTime value="{!model.createdAt}" format="M/d/yyyy hh:mm a"/></td>
+							<td><ui:outputDateTime value="{!model.updatedAt}" format="M/d/yyyy hh:mm a"/></td>
 							<td>
 								<div class="slds-truncate">
-									{!model.status}&nbsp;{!model.failureMsg}
+									{!model.status}
+									<aura:if isTrue="{!model.failureMsg}">
+										&nbsp;{!model.failureMsg}
+									</aura:if>
+									<aura:if isTrue="{!model.status=='RUNNING'}">
+										&nbsp;(<ui:outputNumber value="{!model.progress*100}" format=".0"/>%)
+									</aura:if>
 								</div>
 							</td>
 						</tr>

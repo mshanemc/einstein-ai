@@ -12,6 +12,7 @@ public with sharing class EinsteinLanguage {
 
 	public static final String AUTH = 'https://api.einstein.ai/v2/oauth2/token';
 
+	public static final integer EXPIRY=10080; //documents become non publicly accessible after this many minutes
 
 	public class LanguageException extends exception {}
 
@@ -84,6 +85,13 @@ public with sharing class EinsteinLanguage {
 		createDatasetPart2(SFDCmodelId, CDID);
 	}
 
+	@future(Callout=True)
+	public static void deleteModel (string modelId, string access_token){
+	  httpRequest req = Vision.standard(access_token, DATASET + '/' + modelId, 'DELETE');
+	  Http http = new Http();
+	  HTTPResponse res = http.send(req);
+	}
+
 	@AuraEnabled
 	public static string createDatasetPart2(string SFDCmodelId, string CDID){
 
@@ -92,7 +100,7 @@ public with sharing class EinsteinLanguage {
 		system.debug(LM);
 		map<string, string> params = new map<string, string>();
 
-		params.put('path', CD.ContentDownloadURL);
+		params.put('path', EncodingUtil.urlDecode(CD.ContentDownloadURL, 'UTF-8'));
 		if (LM.Model_Type__c == 'Sentiment'){
 			params.put('type', 'text-sentiment');
 		} else if (LM.Model_Type__c == 'Intent'){
@@ -148,7 +156,7 @@ public with sharing class EinsteinLanguage {
 		CD.Name = name;
 		CD.PreferencesAllowOriginalDownload = true;
 		CD.PreferencesLinkLatestVersion = true;
-		CD.ExpiryDate = system.now().addMinutes(60);
+		CD.ExpiryDate = system.now().addMinutes(EXPIRY);
 		CD.PreferencesExpires = true;
 		CD.PreferencesNotifyOnVisit = false;
 		CD.PreferencesNotifyRndtnComplete = false;
@@ -193,6 +201,7 @@ public with sharing class EinsteinLanguage {
 		}
 
 		string csv = string.join(lines, '\n');
+
 		system.debug(csv);
 		return csv;
 	}

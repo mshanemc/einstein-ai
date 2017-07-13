@@ -76,7 +76,7 @@
 			.then($A.getCallback(function (result){
 				console.log(result);
 				if (result.id){
-					component.set("v.fields.Einstein_Dataset_Id__c", result.id);
+					component.set("v.fields.Einstein_Dataset_Id__c", result.id.toString());
 					component.find("frd").saveRecord(
 						$A.getCallback(function(saveResult){
 							//console.log(saveResult);

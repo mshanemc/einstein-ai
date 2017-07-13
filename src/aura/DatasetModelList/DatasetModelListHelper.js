@@ -10,6 +10,7 @@
 				if (result.message){
 					console.log(result.message); //that's an error!
 				} else if (result.data){
+					console.log(result.data);
 					component.set("v.models", result.data.reverse());
 				} else {
 					console.log("no models returned");

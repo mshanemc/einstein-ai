@@ -13,8 +13,7 @@
 				{!v.data.totalLabels} Labels ({!v.data.totalExamples} total examples)
 			</aura:set>
 
-			<table class="slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout
-">
+			<table class="slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout">
 				<thead>
 					<tr class="slds-text-title--caps">
 						<th scope="col">
@@ -45,9 +44,15 @@
 		</lightning:card>
 	</aura:if>
 
-	<aura:if isTrue="{!and(v.data, !v.data.labelSummary.labels.length>0)}">
+	<aura:if isTrue="{!and(v.data, and(!v.data.statusMsg, !v.data.labelSummary.labels.length>0))}">
 			<div class="slds-box slds-theme_shade">
 				<p class="slds-text-heading_medium slds-text-color_error">No Labels available for this model: {!v.data.statusMsg}</p>
+			</div>
+	</aura:if>
+
+	<aura:if isTrue="{!and(v.data, and(v.data.statusMsg, !v.data.labelSummary.labels.length>0))}">
+			<div class="slds-box slds-theme_shade">
+				<p class="slds-text-heading_medium slds-text-color_error"><p>Labels</p> {!v.data.statusMsg}</p>
 			</div>
 	</aura:if>
 

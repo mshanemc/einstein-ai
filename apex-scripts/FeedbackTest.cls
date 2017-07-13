@@ -2,7 +2,7 @@
 system.debug(
 	EinsteinLanguage.languageFeedback(
 		'My questions is about electrical',
-		'Elecrical',
+		'Electrical',
 		'2RXZRP2VQRJZU4A2LZAM56K2DA',
 		Vision.getAccessToken())
 );

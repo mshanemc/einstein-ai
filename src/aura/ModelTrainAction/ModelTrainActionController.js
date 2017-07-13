@@ -6,7 +6,8 @@
 
 		action.setParams({
 			"modelId" : component.get("v.recordId"),
-			"epochs" : component.get("v.epochs") || null
+			"epochs" : component.get("v.epochs") || null,
+			"retrain" : component.get("v.retrain")
 		});
 		console.log(action);
 
@@ -16,17 +17,18 @@
 			if (state === "SUCCESS") {
 				console.log("Success!");
 				console.log(a.getReturnValue());
-				component.set("v.status", "done");
+				$A.get("e.force:showToast").setParams({
+					"type" : "success",
+					"message" : "Your model is now training.  The modelId is " +a.getReturnValue()+" and it's now saved to the record."
+				}).fire();
+				$A.get("e.ltng:sendMessage").setParams({
+					"message" : component.get("v.recordId"),
+					"channel" : "modelTrain"
+				}).fire();
 				$A.get("e.force:refreshView").fire();
-				component.set("v.modelId", a.getReturnValue());
+				$A.get("e.force:closeQuickAction").fire();
 			}  else if (state === "ERROR") {
-				console.log("Error!");
-				console.log(a.getError());
-				// var appEvent = $A.get("e.c:handleCallbackError");
-				// appEvent.setParams({
-				// 	"errors" : a.getError()
-				// });
-				// appEvent.fire();
+				component.find("leh").passErrors(a.getError());
 			}
 		});
 		$A.enqueueAction(action);

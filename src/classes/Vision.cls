@@ -1,18 +1,24 @@
 public class Vision {
 
 public static final String VISION_API = 'https://api.einstein.ai/v1/vision';
+
 public static final String LANGUAGE_API = 'https://api.einstein.ai/v2/language';
 
 public static final String PREDICT = VISION_API + '/predict';
 public static final String DATASET = VISION_API + '/datasets';
 public static final String TRAIN = VISION_API + '/train';
+public static final String RETRAIN_VISION = 'https://api.einstein.ai/v2/vision/retrain';
+
 public static final String MODELS = VISION_API + '/models';
 
 public static final String DATASET_LANG = LANGUAGE_API + '/datasets';
 public static final String TRAIN_LANG = LANGUAGE_API + '/train';
+public static final String RETRAIN_LANG = LANGUAGE_API + '/retrain';
+
 public static final String MODELS_LANG = LANGUAGE_API + '/models';
 
 public static final String AUTH = 'https://api.einstein.ai/v1/oauth2/token';
+public static final String USAGE = 'https://api.einstein.ai/v2/apiusage';
 
 @AuraEnabled
 public static string scriptHelper (string labelSFDCId){
@@ -22,7 +28,11 @@ public static string scriptHelper (string labelSFDCId){
 }
 
 @AuraEnabled
-public static string train(id modelId, integer epochs){
+public static string train(id modelId, integer epochs, boolean retrain){
+  return trainWithToken(modelId, epochs, retrain, null);
+}
+
+public static string trainWithToken(id modelId, integer epochs, boolean retrain, string token){
 
   map<string, string> params = new map<string, string>();
   if (epochs != null){
@@ -35,14 +45,25 @@ public static string train(id modelId, integer epochs){
 
   if (modelId.getSObjectType().getDescribe().getName()=='VisionModel__c'){
     vm = [select Name, EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:modelId];
-    params.put('name', EncodingUtil.urlEncode(vm.Name, 'UTF-8'));
-    params.put('datasetId', EncodingUtil.urlEncode(vm.EinsteinID__c, 'UTF-8'));
-    req = Vision.standardRequest(null, params, TRAIN);
+    if (!retrain){
+      params.put('name', EncodingUtil.urlEncode(vm.Name, 'UTF-8'));
+      params.put('datasetId', EncodingUtil.urlEncode(vm.EinsteinID__c, 'UTF-8'));
+      req = Vision.standardRequest(null, params, TRAIN);
+    } else {
+      params.put('modelId', EncodingUtil.urlEncode(vm.Einstein_Trained_Model_Id__c, 'UTF-8'));
+      req = Vision.standardRequest(null, params, RETRAIN_VISION);
+    }
   } else if (modelId.getSObjectType().getDescribe().getName()=='Language_Model__c'){
     lm = [select Name, Einstein_Dataset_Id__c, Einstein_Model_Id__c from Language_Model__c where id=:modelId];
-    params.put('name', EncodingUtil.urlEncode(lm.Name, 'UTF-8'));
-    params.put('datasetId', EncodingUtil.urlEncode(lm.Einstein_Dataset_Id__c, 'UTF-8'));
-    req = Vision.standardRequest(null, params, TRAIN_LANG);
+    if (!retrain){
+      params.put('name', EncodingUtil.urlEncode(lm.Name, 'UTF-8'));
+      params.put('datasetId', EncodingUtil.urlEncode(lm.Einstein_Dataset_Id__c, 'UTF-8'));
+      req = Vision.standardRequest(null, params, TRAIN_LANG);
+    } else {
+      params.put('trainParams', '{"withFeedback" : true}');
+      params.put('modelId', EncodingUtil.urlEncode(lm.Einstein_Model_Id__c, 'UTF-8'));
+      req = Vision.standardRequest(null, params, RETRAIN_LANG);
+    }
   }
 
   system.debug(params);
@@ -56,15 +77,20 @@ public static string train(id modelId, integer epochs){
   Http http = new Http();
   HTTPResponse res = http.send(req);
   system.debug(res.getStatus());
+  if (res.getStatusCode()==400){
+    throw new AuraHandledException(res.getBody());
+  }
   system.debug(res.getStatusCode());
 
   string result = ParseStrings(res, 'modelId');
-  if (modelId.getSObjectType().getDescribe().getName()=='VisionModel__c'){
-    vm.Einstein_Trained_Model_Id__c = result;
-    update vm;
-  } else if (modelId.getSObjectType().getDescribe().getName()=='Language_Model__c'){
-    lm.Einstein_Model_Id__c = result;
-    update lm;
+  if (!retrain){
+    if (modelId.getSObjectType().getDescribe().getName()=='VisionModel__c'){
+      vm.Einstein_Trained_Model_Id__c = result;
+      update vm;
+    } else if (modelId.getSObjectType().getDescribe().getName()=='Language_Model__c'){
+      lm.Einstein_Model_Id__c = result;
+      update lm;
+    }
   }
   return result;
 
@@ -88,6 +114,13 @@ public static string getLearningCurves(string modelId){
   visionModel__c vm = [select EinsteinID__c, Einstein_Trained_Model_Id__c from visionModel__c where id=:modelId];
   string output;
   httpRequest req = standard(null, MODELS + '/' + vm.Einstein_Trained_Model_Id__c + '/lc', 'GET');
+  return requestResponse(req);
+}
+
+@AuraEnabled
+public static string getAPIusage(){
+  //USAGE
+  httpRequest req = standard(null, USAGE, 'GET');
   return requestResponse(req);
 }
 
