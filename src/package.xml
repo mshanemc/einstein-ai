@@ -22,7 +22,6 @@
 		<members>DatasetModelList</members>
 		<members>EinsteinAPIUsage2</members>
 		<members>EinsteinLearningCurve</members>
-		<members>EinsteinSignup</members>
 		<members>EinsteinUsage</members>
 		<members>LabelCurl</members>
 		<members>LanguageModelBuilder</members>
