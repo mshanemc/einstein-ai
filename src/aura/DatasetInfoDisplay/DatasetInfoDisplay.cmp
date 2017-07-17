@@ -5,6 +5,7 @@
 
 	<c:LightningErrorHandler aura:id="leh"/>
 
+	<aura:handler event="ltng:sendMessage" action="{!c.doInit}"/>
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
 	<aura:if isTrue="{!v.data.available}">

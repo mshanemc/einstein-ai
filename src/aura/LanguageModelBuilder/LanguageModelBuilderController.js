@@ -86,6 +86,10 @@
 									"message": "Dataset created.  Next, Train a model from this dataset."
 								}).fire();
 								component.find("frd").reloadRecord();
+								$A.get("e.ltng:sendMessage").setParams({
+									"message" : component.get("v.recordId"),
+									"channel" : "datasetCreation"
+								}).fire();
 								$A.get("e.force:refreshView").fire();
 							} else if (saveResult.state === "INCOMPLETE") {
 								console.log("User is offline, device doesn't support drafts.");

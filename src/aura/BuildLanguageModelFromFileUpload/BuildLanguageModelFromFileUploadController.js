@@ -44,7 +44,7 @@
 			.then($A.getCallback(function (result){
 				console.log(result);
 				if (result.id){
-					component.set("v.fields.Einstein_Dataset_Id__c", result.id);
+					component.set("v.fields.Einstein_Dataset_Id__c", result.id.toString());
 					component.find("frd").saveRecord(
 						$A.getCallback(function(saveResult){
 							//console.log(saveResult);
@@ -54,6 +54,10 @@
 									"message": "Einstein is processing your dataset"
 								}).fire();
 								component.find("frd").reloadRecord();
+								$A.get("e.ltng:sendMessage").setParams({
+									"message" : component.get("v.recordId"),
+									"channel" : "datasetCreation"
+								}).fire();
 								$A.get("e.force:refreshView").fire();
 							} else if (saveResult.state === "INCOMPLETE") {
 								console.log("User is offline, device doesn't support drafts.");
