@@ -76,8 +76,20 @@ Just hit the train button on a model and the code will handle the rest #onlyInLi
 
 ## Einstein Language
 
+Follow all the Predictive Vision Setup stuff.
+
 Invocable method from ProcessBuilder for calling standard or custom language models.
 
-Tools in progress for creating custom language models based on
+Invocable method from ProcessBuilder for supplying feedback (corrections to the model).
+
+Lightning Components for creating custom language models based on
 * data in Salesforce
 * files attached via Chatter
+
+Components for
+* total Einstein Usage/Limits
+* showing all labels and example count
+* monitoring the status of model training completion
+
+
+
