@@ -21,7 +21,6 @@
         <members>DatasetModelList</members>
         <members>EinsteinAPIUsage2</members>
         <members>EinsteinLearningCurve</members>
-        <members>EinsteinSignup</members>
         <members>EinsteinUsage</members>
         <members>LabelCurl</members>
         <members>LanguageModelBuilder</members>
@@ -49,7 +48,11 @@
         <name>CustomTab</name>
     </types>
     <types>
-        <members>*</members>
+        <members>Einstein_Prediction_Usage</members>
+        <members>Language_Model_Record_Page</members>
+        <members>Language_Model_Record_Page1</members>
+        <members>Vision_Label_Record_Page</members>
+        <members>Vision_Model_Record_Page</members>
         <name>FlexiPage</name>
     </types>
     <types>

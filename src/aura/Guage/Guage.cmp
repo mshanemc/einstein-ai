@@ -1,8 +1,0 @@
-<aura:component implements="flexipage:availableForRecordHome">
-
-    <ltng:require scripts="{!join(',',$Resource.raphael,$Resource.justgage)}"
-                  afterScriptsLoaded="{!c.afterScriptsLoaded}" />
-
-    <div aura:id="gauge" id="left" class="gauge"></div>
-
-</aura:component>
