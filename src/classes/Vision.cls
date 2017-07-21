@@ -430,13 +430,27 @@ public static httpRequest standard(string access_token, string endpoint, string 
   return output;
 }
 
+public class EinsteinAuthException extends Exception{}
+
 @AuraEnabled
 public static String getAccessToken() {
 
-  EinsteinVision__c EV = EinsteinVision__c.getInstance();
-
+    EinsteinVision__c EV = EinsteinVision__c.getInstance();
     JWT jwt = new JWT('RS256');
-    jwt.cert = EV.CertName__c;
+
+    if (EV.CertName__c == null && EV.CertFile__c!=null){
+      ContentVersion base64Content = [SELECT Title, VersionData FROM ContentVersion where Title=:EV.CertFile__c ORDER BY Title LIMIT 1];
+      String keyContents = base64Content.VersionData.tostring();
+      keyContents = keyContents.replace('-----BEGIN RSA PRIVATE KEY-----', '');
+      keyContents = keyContents.replace('-----END RSA PRIVATE KEY-----', '');
+      keyContents = keyContents.replace('\n', '');
+      jwt.pkcs8 = keyContents;
+    } else if (EV.CertName__c != null && EV.CertFile__c==null){
+      jwt.cert = EV.CertName__c;
+    } else {
+      throw new EinsteinAuthException('Your custom settings are not set up properly.  Either CertFile or CertName should be populated');
+    }
+
     jwt.iss = EV.certificateIssuer__c;
     jwt.sub = EV.EinsteinUsername__c;
     jwt.aud = AUTH;
