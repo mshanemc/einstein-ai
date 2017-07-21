@@ -1,0 +1,11 @@
+<design:component label="Live Record">
+
+	<design:attribute name="autoRefresh" label="Auto-Refresh" description="Automatically refresh the view when the data changes (if you're typing, it'll just dump your work.  Users might not like that on records they edit often)"/>
+
+	<design:attribute name="autoToast" label="Auto-Toast" description="Display a toast message alerting the user that the record has changed"/>
+
+	<design:attribute name="log" label="Log Stuff" description="Log the events received, whether they match or not, to the browser console.  Useful for debugging"/>
+
+	<design:attribute name="visible" label="Visibility" description="Shows the component on the page.  Useful for making sure you don't accidentally put 3 on the page in AppBuilder.  Uncheck the box to hide it...good luck finding it again.  :)"/>
+
+</design:component>

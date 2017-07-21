@@ -4,10 +4,23 @@
     <description>defines credentials and endpoints for the predictive vision service</description>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>CertName__c</fullName>
-        <description>the Salesforce name of your security certificate</description>
+        <fullName>CertFile__c</fullName>
+        <defaultValue>&quot;einstein_platform&quot;</defaultValue>
+        <description>the Salesforce file name where your certificate is stored.</description>
         <externalId>false</externalId>
-        <inlineHelpText>the Salesforce name of your security certificate</inlineHelpText>
+        <inlineHelpText>the Salesforce file name where your certificate is stored.  Use this if you signed up and downloaded a .pem file (typical names are &quot;predictive_services&quot; and &quot;einstein_platform&quot;</inlineHelpText>
+        <label>CertFile</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CertName__c</fullName>
+        <description>the Salesforce name of your security certificate.  (PKS method)</description>
+        <externalId>false</externalId>
+        <inlineHelpText>the Salesforce name of your security certificate.  Use this if you signed up for Einstein very early and have an Einstein-related security certificate in Setup&gt;Security&gt;Certificate and Key Management</inlineHelpText>
         <label>CertName</label>
         <length>255</length>
         <required>false</required>

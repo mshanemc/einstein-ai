@@ -1,0 +1,9 @@
+<aura:component controller="StreamerCtrl">
+
+    <ltng:require scripts="{!join(',', $Resource.streaming + '/js/cometd.js', $Resource.streaming + '/js/jquery-1.5.1.js', $Resource.streaming + '/js/json2.js', $Resource.streaming + '/js/jquery.cometd.js')}" afterScriptsLoaded="{!c.doInit}" />
+
+    <aura:attribute name="topic" type="string" required="true" />
+    <aura:attribute name="platformEvent" type="string" required="false" access="global"/>
+
+
+</aura:component>
