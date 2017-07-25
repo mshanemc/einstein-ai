@@ -14,6 +14,7 @@
   * you should end up with a .pem file
   * don't do the **generate token** section (the package does that for you)
   * If you've already done this once, you can't do it again with a user with the same email.  You **can** use the same email and .pem file in multiple orgs.
+  * we're going to upload this in SFDC.  Keep this file handy and safe, in case you need to use it in future orgs.
 
 3. Do the **Upload Your Key** section.  Once the file uploads, be sure to share/make it visible to everyone in the org
 4. In Salesforce, go to Custom Settings, to EinsteinVision, and then click Manage.
