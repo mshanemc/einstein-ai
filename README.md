@@ -13,6 +13,7 @@
 2. From https://metamind.readme.io/docs/what-you-need-to-call-api#section-get-an-einstein-platform-services-account do the signpup
   * you should end up with a .pem file
   * don't do the **generate token** section (the package does that for you)
+  * If you've already done this once, you can't do it again with a user with the same email.  You **can** use the same email and .pem file in multiple orgs.
 
 3. Do the **Upload Your Key** section.  Once the file uploads, be sure to share/make it visible to everyone in the org
 4. In Salesforce, go to Custom Settings, to EinsteinVision, and then click Manage.
