@@ -17,7 +17,9 @@
 3. Do the **Upload Your Key** section.  Once the file uploads, be sure to share/make it visible to everyone in the org
 4. In Salesforce, go to Custom Settings, to EinsteinVision, and then click Manage.
 5. Create a new setting at the organizational default level
-6. Set the Einstein Username you signed up with, and CertFile to be the name of the cert from step 3 (defaults to einstein_platform).  Leave CertName blank (that's for people using the old signup process)
+6. Set the Einstein Username you signed up with, and CertFile to be the name of the cert from step 3 (defaults to einstein_platform).  Leave CertName blank (that's for people using the old signup process).
+  * This username will be a **real email address**
+  * If you used the oAuth flow from a Salesforce login to sign up (like the instructions), the username is the **email address** attached to that user, which may not be the same as the Salesforce username
 6. Pick a userId to be the Einstein user (bonus points for having a user named Einstein and setting their chatter picture!).
 7. token expiration time should be 3600
 8. certificate issuer: developer.force.com
