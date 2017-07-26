@@ -10,18 +10,19 @@
   </a>
 
 
-2. From https://metamind.readme.io/docs/what-you-need-to-call-api#section-get-an-einstein-platform-services-account do the signpup
-  * you should end up with a .pem file
-  * don't do the **generate token** section (the package does that for you)
-  * If you've already done this once, you can't do it again with a user with the same email.  You **can** use the same email and .pem file in multiple orgs.
-  * we're going to upload this in SFDC.  Keep this file handy and safe, in case you need to use it in future orgs.
+2. From https://metamind.readme.io/docs/what-you-need-to-call-api#section-get-an-einstein-platform-services-account do the signup
+    * you should end up with a .pem file
+    * don't do the **generate token** section (the package does that for you)
+    * If you've already done this once, you can't do it again with a user with the same email.  You **can** use the same email and .pem file in multiple orgs.
+
+    * we're going to upload this in SFDC.  Keep this file handy and safe, in case you need to use it in future orgs.
 
 3. Do the **Upload Your Key** section.  Once the file uploads, be sure to share/make it visible to everyone in the org
 4. In Salesforce, go to Custom Settings, to EinsteinVision, and then click Manage.
 5. Create a new setting at the organizational default level
 6. Set the Einstein Username you signed up with, and CertFile to be the name of the cert from step 3 (defaults to einstein_platform).  Leave CertName blank (that's for people using the old signup process).
-  * This username will be a **real email address**
-  * If you used the oAuth flow from a Salesforce login to sign up (like the instructions), the username is the **email address** attached to that user, which may not be the same as the Salesforce username
+    * This username will be a **real email address**
+    * If you used the oAuth flow from a Salesforce login to sign up (like the instructions), the username is the **email address** attached to that user, which may not be the same as the Salesforce username
 6. Pick a userId to be the Einstein user (bonus points for having a user named Einstein and setting their chatter picture!).
 7. token expiration time should be 3600
 8. certificate issuer: developer.force.com
@@ -32,8 +33,8 @@
 1. *Try the standard model*: In Salesforce, create a vision model (you can call it anything) and set the `Einstein Trained Model Id` to `GeneralImageClassifier`
 2. Post an image as a file or as a link to the Chatter feed.
 3. Click on the comment box (live feed) or reload the page to see the response.
-  * getting predictions and probabilities is good
-  * getting "I don't have an answer for that" means your setup is probably wrong.
+    * getting predictions and probabilities is good
+    * getting "I don't have an answer for that" means your setup is probably wrong.
 
 ## Goal of this project
 * Access Einstien in Salesforce without writing code
@@ -93,6 +94,12 @@ Just hit the train button on a model and the code will handle the rest #onlyInLi
 Follow all the Predictive Vision Setup stuff.
 
 Invocable method from ProcessBuilder for calling standard or custom language models.
+1. create at least a custom text field to store the prediction
+2. create a process builder on the object.  Pass in the required fields (recordId, field to analyze, and the field to store from step 1)
+    * make sure the fields are not null
+    * set up your criteria so that you're only requesting predictions when the field to analyze changes or is new
+3. optionally, store things like the probability (another custom field), raw results (another custom field) or use a custom modelId+type instead of the default sentiment
+4. Create some records!  You'll have to refresh the page to see them, unless you're using the LiveRecord component/event (included!).  More on that here: https://github.com/mshanemc/liveRecord
 
 Invocable method from ProcessBuilder for supplying feedback (corrections to the model).
 
