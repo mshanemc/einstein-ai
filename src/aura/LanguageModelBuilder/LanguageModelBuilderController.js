@@ -6,7 +6,7 @@
 				console.log(result);
 				component.set("v.objects", result);
 				//TODO: lodash to alphabetize that crap!
-			}));
+			}), $A.getCallback(function(){}));
 	},
 
 	getFields : function(component, event, helper) {
@@ -20,7 +20,7 @@
 				console.log(result);
 				component.set("v.sourceFields", result);
 				//TODO: lodash to alphabetize!
-			}));
+			}), $A.getCallback(function(){}));
 
 		let classify = component.get("c.getObjectFields");
 		classify.setParams({
@@ -32,7 +32,7 @@
 				console.log(result);
 				component.set("v.classificationFields", result);
 				//TODO: lodash to alphabetize!
-			}));
+			}), $A.getCallback(function(){}));
 	},
 
 	getFile : function(component, event, helper) {
@@ -52,7 +52,7 @@
 					"type" : "success"
 				}).fire();
 				$A.get("e.force:refreshView").fire();
-			}));
+			}), $A.getCallback(function(){}));
 	},
 
 	makeModel : function(component, event, helper) {
@@ -101,7 +101,7 @@
 				} else if (result.message) {
 					component.find("leh").passErrors(	[{"message" : result.message }] );
 				}
-			}));
+			}), $A.getCallback(function(){}));
 	},
 
 

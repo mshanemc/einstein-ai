@@ -5,6 +5,6 @@
 			.then($A.getCallback(function (token){
 				console.log(token);
 				component.set("v.token", token);
-			}));
+			}), $A.getCallback(function(){}));
 	}
 })

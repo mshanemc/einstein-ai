@@ -14,7 +14,6 @@
 						helper.toastThis(pageError.message);
 						showTopLevelError = false;
 					});
-
 				}
 
 				if (error.fieldErrors){
@@ -30,7 +29,8 @@
 
 				//top-level error.  there can be only one
 				if (error.message && showTopLevelError){
-					helper.toastThis(error.message);
+					helper.handlingUnhandled(error.message);
+					//helper.toastThis(error.message);
 				}
 			}); //end Errors forEach
 		}
@@ -45,5 +45,19 @@
 			"mode": "sticky"
 		});
 		toastEvent.fire();
-	}
+	},
+
+	handlingUnhandled : function(message) {
+		let helper = this;
+		let keyBit = 'Caused by: common.apex.runtime.impl.ExecutionException: ';
+		if (message.includes(keyBit)){
+			console.log("includes the evil string");
+			helper.toastThis( message.substring(message.indexOf(keyBit)+keyBit.length).trim() );
+		}	else {
+			console.log("didn't include the evil string");
+			helper.toastThis(message);
+		}
+	},
+
+
 })

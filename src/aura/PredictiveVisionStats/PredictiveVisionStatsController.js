@@ -31,7 +31,7 @@
 				} catch (err){
 					console.log("no data available for this model");
 				}
-			}));
+			}), $A.getCallback(function(){}));
 
 	}
 })

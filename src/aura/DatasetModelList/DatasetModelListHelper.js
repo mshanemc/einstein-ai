@@ -16,7 +16,7 @@
 					console.log("no models returned");
 				}
 				component.set("v.done", true);
-			}));
+			}), $A.getCallback(function(){}));
 			//Object {message: "Unable to find entity with ID null"}message: "Unable to find entity with ID null"__proto__: Object
 
 	},

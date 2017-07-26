@@ -8,5 +8,9 @@
 		<aura:attribute name="errorObject" type="object" required="true" />
 	</aura:method>
 
+	<aura:method name="passText" action="{!c.simple}" access="global" description="pass in a simple string to be used as the error message">
+		<aura:attribute name="text" type="string" required="true" />
+	</aura:method>
+
 	{!v.body}
 </aura:component>

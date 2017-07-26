@@ -4,15 +4,15 @@
 		let action = component.get("c.getFileOptions");
 		action.setParams({
 			"recordId" : component.get("v.recordId")
-		})
+		});
 		let prom = helper.executeActionJSON(component, action)
 			.then($A.getCallback(function (result){
 				console.log(result);
 				component.set("v.files", result);
-			}));
+			}), $A.getCallback(function(){}));
 	},
 
-	previewFile : function(component, event, helper) {
+	previewFile : function(component) {
 		$A.get('e.lightning:openFiles').fire({
       recordIds: [component.get("v.selectedFile")]
 		});
@@ -67,7 +67,7 @@
 						})
 					);
 				}
-			}));
+			}), $A.getCallback(function(){}));
 	},
 
 
