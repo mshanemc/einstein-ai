@@ -439,7 +439,11 @@ public static String getAccessToken() {
     JWT jwt = new JWT('RS256');
 
     if (EV.CertName__c == null && EV.CertFile__c!=null){
-      ContentVersion base64Content = [SELECT Title, VersionData FROM ContentVersion where Title=:EV.CertFile__c ORDER BY Title LIMIT 1];
+      try{
+        ContentVersion base64Content = [SELECT Title, VersionData FROM ContentVersion where Title=:EV.CertFile__c ORDER BY Title LIMIT 1];
+      } catch (exception e){
+        throw new AuraHandledException('The certificate file was not found.  Check that it is installed, named correctly in the custom settings, and visible to all users who need to use it');
+      }
       String keyContents = base64Content.VersionData.tostring();
       keyContents = keyContents.replace('-----BEGIN RSA PRIVATE KEY-----', '');
       keyContents = keyContents.replace('-----END RSA PRIVATE KEY-----', '');
@@ -454,7 +458,7 @@ public static String getAccessToken() {
     jwt.iss = EV.certificateIssuer__c;
     jwt.sub = EV.EinsteinUsername__c;
     jwt.aud = AUTH;
-    jwt.exp = string.valueOf(EV.TokenExpirationTime__c);
+    jwt.validFor = integer.valueOf(EV.TokenExpirationTime__c);
     String access_token = JWTBearerFlow.getAccessToken(AUTH, jwt);
 
     system.debug(access_token);
