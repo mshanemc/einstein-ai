@@ -36,7 +36,7 @@
 							<td><ui:outputDateTime value="{!model.createdAt}" format="M/d/yyyy hh:mm a"/></td>
 							<td><ui:outputDateTime value="{!model.updatedAt}" format="M/d/yyyy hh:mm a"/></td>
 							<td>
-								<div class="slds-truncate" title="{!model.status + ' ' + model.failureMsg">
+								<div class="slds-truncate" title="{!model.status + ' ' + model.failureMsg}">
 									{!model.status}
 									<aura:if isTrue="{!model.failureMsg}">
 										&nbsp;{!model.failureMsg}
@@ -64,8 +64,5 @@
 			<lightning:spinner aura:id="spinner" />
 		</div>
 	</aura:if>
-
-
-
 
 </aura:component>
