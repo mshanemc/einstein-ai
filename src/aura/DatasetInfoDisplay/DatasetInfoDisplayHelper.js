@@ -10,7 +10,9 @@
 				console.log(result);
 				component.set("v.data", result);
 				component.set("v.done", true);
-			}), $A.getCallback(function(){}));
+			}), $A.getCallback(function(){
+				component.set("v.done", true);
+			}));
 	},
 
 	shouldRetry : function(component) {
