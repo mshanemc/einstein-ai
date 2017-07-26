@@ -441,14 +441,15 @@ public static String getAccessToken() {
     if (EV.CertName__c == null && EV.CertFile__c!=null){
       try{
         ContentVersion base64Content = [SELECT Title, VersionData FROM ContentVersion where Title=:EV.CertFile__c ORDER BY Title LIMIT 1];
+        String keyContents = base64Content.VersionData.tostring();
+        keyContents = keyContents.replace('-----BEGIN RSA PRIVATE KEY-----', '');
+        keyContents = keyContents.replace('-----END RSA PRIVATE KEY-----', '');
+        keyContents = keyContents.replace('\n', '');
+        jwt.pkcs8 = keyContents;
       } catch (exception e){
         throw new AuraHandledException('The certificate file was not found.  Check that it is installed, named correctly in the custom settings, and visible to all users who need to use it');
       }
-      String keyContents = base64Content.VersionData.tostring();
-      keyContents = keyContents.replace('-----BEGIN RSA PRIVATE KEY-----', '');
-      keyContents = keyContents.replace('-----END RSA PRIVATE KEY-----', '');
-      keyContents = keyContents.replace('\n', '');
-      jwt.pkcs8 = keyContents;
+
     } else if (EV.CertName__c != null && EV.CertFile__c==null){
       jwt.cert = EV.CertName__c;
     } else {
