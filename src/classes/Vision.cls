@@ -228,6 +228,12 @@ public static void predictChatter (id feedPostId){
   //get feeditem
   feeditem fi = [select Id, type, HasLink, LinkUrl, ParentId, RelatedRecordId from feeditem where id=:feedPostId];
 
+  feedComment fc = new feedComment();
+  fc.CommentType = 'TextComment';
+  fc.FeedItemId = fi.id;
+  EinsteinVision__c EV = EinsteinVision__c.getInstance();
+  fc.createdById = EV.LocalEinsteinUser__c;
+
   visionModel__c vm = [select Id, Name, Einstein_Trained_Model_Id__c, Cutoff_Percentage__c, Show_alternative_classifications__c from visionModel__c where id =: fi.ParentId];
   //url link
   list<Prediction> predictions = new list<Prediction>();
@@ -242,17 +248,13 @@ public static void predictChatter (id feedPostId){
     predictions = predictBlob(CV.VersionData, getAccessToken(), vm.Einstein_Trained_Model_Id__c);
   } else {
     system.debug('it is neither a link nor a content post.  type == ' + fi.type);
+    fc.CommentBody = 'The post doesn\'t have an attachment (ContentPost) or contain an image link.  Its type is "fi.type"';
   }
   system.debug(predictions);
 
   //make the comment about our prediction
 
-  feedComment fc = new feedComment();
   fc.CommentBody = buildChatterResponse(Predictions, vm.Cutoff_Percentage__c, vm.Show_alternative_classifications__c);
-  fc.CommentType = 'TextComment';
-  fc.FeedItemId = fi.id;
-  EinsteinVision__c EV = EinsteinVision__c.getInstance();
-  fc.createdById = EV.LocalEinsteinUser__c;
 
   insert fc;
 
