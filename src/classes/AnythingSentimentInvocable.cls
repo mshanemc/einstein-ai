@@ -3,6 +3,11 @@ public with sharing class AnythingSentimentInvocable {
 	@InvocableMethod(label='Have Einstein analyze text')
 	public static void AnalyzeLanguage(list<LanguageRequest> LRs) {
 
+		//don't allow this run in future, batch, or queueable
+		if (system.isFuture() || system.isBatch() || system.isQueueable()){
+			return;
+		}
+
 		list<string> singleBatch = new list<string>();
 		list<list<string>> Batches = new list<list<string>>();
 

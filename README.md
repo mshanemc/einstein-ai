@@ -97,8 +97,19 @@ Invocable method from ProcessBuilder for calling standard or custom language mod
 1. create at least a custom text field to store the prediction
 2. create a process builder on the object.  Pass in the required fields (recordId, field to analyze, and the field to store from step 1)
     * make sure the fields are not null
-    * set up your criteria so that you're only requesting predictions when the field to analyze changes or is new
-3. optionally, store things like the probability (another custom field), raw results (another custom field) or use a custom modelId+type instead of the default sentiment
+    * set up your criteria so that you're only requesting predictions when the field to analyze changes or is new.  This is important--recursion is not your friend.
+    * Example criteria for analyzing case subject
+
+    ```
+    and(
+      not(ISBLANK([Case].Subject)),
+      or (
+        and (ISNEW()),
+        ISCHANGED([Case].Subject)
+      )
+    )
+    ```
+3. optionally, store things like the probability (another custom field...number, not text.  I used 3,3 for my decimal places), raw results (another custom field) or use a custom modelId+type instead of the default sentiment
 4. Create some records!  You'll have to refresh the page to see them, unless you're using the LiveRecord component/event (included!).  More on that here: https://github.com/mshanemc/liveRecord
 
 Invocable method from ProcessBuilder for supplying feedback (corrections to the model).
@@ -111,6 +122,17 @@ Components for
 * total Einstein Usage/Limits
 * showing all labels and example count
 * monitoring the status of model training completion
+
+===
+
+## Debugging/Problems
+
+I've got a lot of system.debug stuff running in my code.  If you're seeing something not working, please open up the dev console, go to Logs, and then request your predictions.   You'll see the logs coming in, and get some hints about what might be wrong.
+
+
+
+
+
 
 
 
