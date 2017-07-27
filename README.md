@@ -31,7 +31,7 @@
 ## Validate the setup
 
 1. *Try the standard model*: In Salesforce, create a vision model (you can call it anything) and set the `Einstein Trained Model Id` to `GeneralImageClassifier`
-2. Post an image as a file or as a link to the Chatter feed.
+2. Post an image as a file or as a link to the Chatter feed (for files, use the Attachment paperclip in chatter, not the inline image [mountains icon] inside the post body)
 3. Click on the comment box (live feed) or reload the page to see the response.
     * getting predictions and probabilities is good
     * getting "I don't have an answer for that" means your setup is probably wrong.
