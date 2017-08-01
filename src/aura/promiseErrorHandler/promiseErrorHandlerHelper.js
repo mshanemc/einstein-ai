@@ -1,4 +1,3 @@
-
 ({
 	/*
 	cmp : pass in the component itself
@@ -15,7 +14,6 @@
 					resolve(a.getReturnValue());
 				}
 				else if (state === "ERROR") {
-					console.log(a.getError());
 					cmp.getSuper().find('leh').passErrors(a.getError());
 					reject(Error(a.getError()));
 				} else if (state === "INCOMPLETE"){
@@ -56,5 +54,6 @@
 			$A.enqueueAction(action);
 		});
 	},
+
 
 })

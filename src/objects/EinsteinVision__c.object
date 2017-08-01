@@ -30,9 +30,9 @@
     </fields>
     <fields>
         <fullName>EinsteinUsername__c</fullName>
-        <description>username (probably an email address) that you used to sign up for the Eintstein predictive vision service</description>
+        <description>Email that you used to sign up for the Eintstein predictive vision service.  If you signed in with your Salesforce org, it&apos;s the email address (not necessarily the username) on your user.</description>
         <externalId>false</externalId>
-        <inlineHelpText>username (probably an email address) that you used to sign up for the Eintstein predictive vision service</inlineHelpText>
+        <inlineHelpText>Email that you used to sign up for the Eintstein predictive vision service.  If you signed in with your Salesforce org, it&apos;s the email address (not necessarily the username) on your user.</inlineHelpText>
         <label>EinsteinUsername</label>
         <length>255</length>
         <required>false</required>

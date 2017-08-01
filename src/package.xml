@@ -66,6 +66,10 @@
         <name>Layout</name>
     </types>
     <types>
+        <members>*</members>
+        <name>PermissionSet</name>
+    </types>
+    <types>
         <members>Language_Model__c.Train_Model</members>
         <members>VisionModel__c.Create_Label</members>
         <members>VisionModel__c.Train</members>
