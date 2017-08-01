@@ -1,0 +1,6 @@
+<design:component label="Label Curl Cheat Sheet">
+	<design:attribute name="localPath" label="LocalPath" description="Where your executable file lives.  example: ~/code/EinsteinVision/directoryUploader.sh" />
+	<sfdc:objects >
+	        <sfdc:object >Label__c</sfdc:object>
+	</sfdc:objects>
+</design:component>

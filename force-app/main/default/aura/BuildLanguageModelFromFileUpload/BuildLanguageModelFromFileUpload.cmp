@@ -1,0 +1,45 @@
+<aura:component implements="force:hasRecordId,flexipage:availableForRecordHome" extends="c:promiseErrorHandler" controller="EinsteinLanguage">
+
+	<aura:attribute name="files" type="object[]"/>
+	<aura:attribute name="selectedFile" type="string"/>
+
+	<aura:attribute name="fields" type="object" />
+	<aura:attribute name="fieldsv" type="object" />
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<force:recordData aura:id="frd" targetFields="{!v.fields}" recordId="{!v.recordId}" mode="EDIT" layoutType="FULL"/>
+	<force:recordData aura:id="frdv" targetFields="{!v.fieldsv}" recordId="{!v.recordId}" mode="VIEW" layoutType="FULL"/>
+
+	<c:LightningErrorHandler aura:id="leh"/>
+
+	<aura:if isTrue="{!!v.fieldsv.Einstein_Dataset_Id__c}">
+		<lightning:card title="Create Dataset from Attached File">
+			<div class="slds-p-around--medium">
+				<aura:if isTrue="{!v.files.length>0}">
+					<div class="slds-m-bottom--medium">
+						<lightning:select label="Select an File" value="{!v.selectedFile}">
+							<aura:iteration items="{!v.files}" var="file">
+								<option value="{!file.ContentDocumentId}" text="{!file.ContentDocument.Title}"/>
+							</aura:iteration>
+						</lightning:select>
+					</div>
+
+					<aura:if isTrue="{!v.selectedFile}">
+						<div class="slds-m-bottom--medium">
+							<lightning:buttonGroup >
+								<lightning:button variant="neutral" label="Preview" onclick="{! c.previewFile }" />
+								<lightning:button variant="brand" label="Build Dataset" onclick="{! c.makeModel }" />
+							</lightning:buttonGroup>
+						</div>
+					</aura:if>
+				</aura:if>
+				<aura:if isTrue="{!v.files.length==0}">
+					<p>No files attached to this record</p>
+					<p>Upload one to use for the model, then refresh the page</p>
+				</aura:if>
+			</div>
+		</lightning:card>
+	</aura:if>
+
+</aura:component>
