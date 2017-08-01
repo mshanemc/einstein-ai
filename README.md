@@ -2,7 +2,7 @@
 
 ## Basic Setup (Language and Vision need this)
 
-1. First, install this repo into your org.
+1. First, install this repo into your org, and add the EinsteinApps perm set to users that need it.
 
   <a href="https://githubsfdeploy.herokuapp.com">
   <img alt="Deploy to Salesforce"
