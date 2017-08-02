@@ -192,15 +192,17 @@ public with sharing class EinsteinLanguage {
 
 
 	private static string makeCSV (string SFDCmodelId, string obj, string src, string classify){
-		string query = 'select ' +src+ ', ' +classify+ ' from ' +obj+ ' where ' + src + '!= null and ' + classify + '!= null limit 50000';
+		string query = 'select ' +src+ ', ' +classify+ ' from ' +obj+ ' where ' + classify + '!= null limit 50000';
 
 		list<sobject> data = database.query(query);
 
 		list<string> lines = new list<string>();
 
 		for (sobject so:data){
-			string thisLine = '"' + (string)so.get(src) + '",' + (string)so.get(classify);
-			lines.add(thisLine);
+			if ((string)so.get(src)!=null){ //filter for null src field here, since we can't avoid them in SOQL where
+				string thisLine = '"' + (string)so.get(src) + '",' + (string)so.get(classify);
+				lines.add(thisLine);
+			}
 		}
 
 		string csv = string.join(lines, '\n');
