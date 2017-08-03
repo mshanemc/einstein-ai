@@ -200,7 +200,9 @@ public with sharing class EinsteinLanguage {
 
 		for (sobject so:data){
 			if ((string)so.get(src)!=null){ //filter for null src field here, since we can't avoid them in SOQL where
-				string thisLine = '"' + (string)so.get(src) + '",' + (string)so.get(classify);
+				string text = (string)so.get(src);
+				text = text.escapeCsv();
+				string thisLine = '"' + text + '",' + (string)so.get(classify);
 				lines.add(thisLine);
 			}
 		}

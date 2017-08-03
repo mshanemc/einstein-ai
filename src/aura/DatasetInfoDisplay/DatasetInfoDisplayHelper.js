@@ -1,5 +1,9 @@
 ({
 	fetch : function(component) {
+		if (!component.isValid()){
+			return;
+		}
+
 		let helper = this;
 		let action = component.get("c.getLabels");
 		action.setParams({
@@ -16,6 +20,9 @@
 	},
 
 	shouldRetry : function(component) {
+		if (!component.isValid()){
+			return false;
+		}
 		if (component.get("v.data").statusMsg==='UPLOADING' || !component.get("v.done")){
 			return true;
 		} else {

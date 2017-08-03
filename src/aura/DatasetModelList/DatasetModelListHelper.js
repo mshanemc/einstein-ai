@@ -1,5 +1,9 @@
 ({
 	getModels : function(component) {
+		if (!component.isValid()){
+			return;
+		}
+
 		let that = this; //get access to extended methods
 
 		let action = component.get("c.getAllModels");
@@ -23,6 +27,9 @@
 	},
 
 	shouldRetry : function(component) {
+		if (!component.isValid()){
+			return false;
+		}
 		if (!component.get("v.done")){
 			//console.log("returning true because done = " + component.get("v.done"));
 			return true; //obviously our connection sucks
