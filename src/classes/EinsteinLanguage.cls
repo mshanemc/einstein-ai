@@ -143,7 +143,7 @@ public with sharing class EinsteinLanguage {
 
 		Language_Model__c lm = [select id, name from Language_Model__c where id=:SFDCmodelId];
 		ContentVersion CV = new ContentVersion();
-		CV.VersionData = blob.valueof(makeCSV(SFDCmodelId, obj, src, classify));
+		CV.VersionData = blob.valueof(makeCSV(obj, src, classify));
 		CV.PathOnClient = lm.name.replace(' ', '') + '.csv';
 		CV.Title = lm.name.replace(' ', '');
 
@@ -172,7 +172,7 @@ public with sharing class EinsteinLanguage {
 		Language_Model__c lm = [select id, name from Language_Model__c where id=:SFDCmodelId];
 
 		ContentVersion CV = new ContentVersion();
-		CV.VersionData = blob.valueof(makeCSV(SFDCmodelId, obj, src, classify));
+		CV.VersionData = blob.valueof(makeCSV(obj, src, classify));
 		CV.PathOnClient = lm.name.replace(' ', '') + '.csv';
 		CV.Title = lm.name.replace(' ', '');
 
@@ -190,8 +190,15 @@ public with sharing class EinsteinLanguage {
 
 	}
 
+	public static string csvClean(string input){
+		string output = input;
+		output = output.replaceAll('\\r\\n', ' ');
+		output = output.replaceAll('\\n', ' ');
+		output = output.replaceAll('\"', '\'');
+		return output;
+	}
 
-	private static string makeCSV (string SFDCmodelId, string obj, string src, string classify){
+	public static string makeCSV (string obj, string src, string classify){
 		string query = 'select ' +src+ ', ' +classify+ ' from ' +obj+ ' where ' + classify + '!= null limit 50000';
 
 		list<sobject> data = database.query(query);
@@ -199,10 +206,9 @@ public with sharing class EinsteinLanguage {
 		list<string> lines = new list<string>();
 
 		for (sobject so:data){
+			system.debug(so);
 			if ((string)so.get(src)!=null){ //filter for null src field here, since we can't avoid them in SOQL where
-				string text = (string)so.get(src);
-				text = text.escapeCsv();
-				string thisLine = '"' + text + '",' + (string)so.get(classify);
+				string thisLine = '"' + csvClean((string)so.get(src)) + '",' + '"' + csvClean((string)so.get(classify)) + '"';
 				lines.add(thisLine);
 			}
 		}
