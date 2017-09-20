@@ -3,9 +3,7 @@
 		let action = component.get("c.getObjectOptions");
 		let prom = helper.executeActionJSON(component, action)
 			.then($A.getCallback(function (result){
-				console.log(result);
-				component.set("v.objects", result);
-				//TODO: lodash to alphabetize that crap!
+				component.set("v.objects", _.sortBy(result, ['label', 'name']));
 			}), $A.getCallback(function(){}));
 	},
 
@@ -18,8 +16,7 @@
 		let prom = helper.executeActionJSON(component, source)
 			.then($A.getCallback(function (result){
 				console.log(result);
-				component.set("v.sourceFields", result);
-				//TODO: lodash to alphabetize!
+				component.set("v.sourceFields", _.sortBy(result, ['label', 'name']));
 			}), $A.getCallback(function(){}));
 
 		let classify = component.get("c.getObjectFields");

@@ -33,7 +33,11 @@ public with sharing class EinsteinLanguage {
 				!dsor.isCustomSetting() //no custom settings
 			) {
 				map<string, string> tempMap = new map<string, string>();
-				tempMap.put('label', dsor.getLabel());
+				if (dsor.getLabel() != dsor.getName()){
+					tempMap.put('label', dsor.getLabel() + ' (' + dsor.getName() + ')');
+				} else {
+					tempMap.put('label', dsor.getLabel());
+				}
 				tempMap.put('name', dsor.getName());
 				output.add(tempMap);
 			}
@@ -76,7 +80,11 @@ public with sharing class EinsteinLanguage {
 					)
 			){
 				map<string, string> tempMap = new map<string, string>();
-				tempMap.put('label', dfr.getLabel());
+				if (dfr.getLabel() != dfr.getName()){
+					tempMap.put('label', dfr.getLabel() + ' (' + dfr.getName() + ')' + ' [' + dfr.getType().name() + ']');
+				} else {
+					tempMap.put('label', dfr.getLabel() + ' [' + dfr.getType().name() + ']');
+				}
 				tempMap.put('name', dfr.getName());
 				tempMap.put('type', dfr.getType().name());
 				output.add(tempMap);

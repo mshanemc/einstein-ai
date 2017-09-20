@@ -82,6 +82,7 @@
     </types>
     <types>
         <members>streaming</members>
+        <members>lodash</members>
         <name>StaticResource</name>
     </types>
     <version>40.0</version>

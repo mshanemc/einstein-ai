@@ -12,7 +12,7 @@
 	<aura:attribute name="fields" type="object" />
 	<aura:attribute name="fieldsv" type="object" />
 
-	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<ltng:require scripts="{!$Resource.lodash}" afterScriptsLoaded="{!c.doInit}"/>
 
 	<force:recordData aura:id="frdv" targetFields="{!v.fieldsv}" recordId="{!v.recordId}" mode="VIEW" layoutType="FULL"/>
 	<force:recordData aura:id="frd" targetFields="{!v.fields}" recordId="{!v.recordId}" mode="EDIT" layoutType="FULL"/>
