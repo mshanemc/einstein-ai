@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CertFile__c</fullName>
+    <defaultValue>"einstein_platform"</defaultValue>
+    <description>the Salesforce file name where your certificate is stored.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>the Salesforce file name where your certificate is stored.  Use this if you signed up and downloaded a .pem file (typical names are "predictive_services" and "einstein_platform"</inlineHelpText>
+    <label>CertFile</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

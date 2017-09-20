@@ -1,0 +1,6 @@
+<design:component label="Train a Model from this Dataset">
+	<sfdc:objects >
+    <sfdc:object >VisionModel__c</sfdc:object>
+    <sfdc:object >Language_Model__c</sfdc:object>
+	</sfdc:objects>
+</design:component>

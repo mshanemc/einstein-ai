@@ -1,0 +1,18 @@
+<aura:component implements="force:hasRecordId,flexipage:availableForRecordHome" access="global">
+
+	<aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
+	<aura:attribute name="autoRefresh" type="boolean" default="true" access="global"/>
+	<aura:attribute name="autoToast" type="boolean" default="true" access="global"/>
+	<aura:attribute name="visible" type="boolean" default="true" access="global"/>
+	<aura:attribute name="log" type="boolean" default="false" access="global"/>
+
+	<c:Streamer platformEvent="Record_Change__e" />
+
+	<aura:if isTrue="{!v.visible}">
+		<lightning:card title="LiveRecord" iconName="utility:refresh">
+			<p class="slds-p-horizontal--small">
+				LiveRecord automatically updates records when someone else changes the data.
+			</p>
+		</lightning:card>
+	</aura:if>
+</aura:component>

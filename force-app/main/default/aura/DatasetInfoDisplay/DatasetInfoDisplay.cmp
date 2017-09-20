@@ -1,0 +1,66 @@
+<aura:component implements="force:hasRecordId,flexipage:availableForAllPageTypes" controller="EinsteinLanguage" extends="c:promiseErrorHandler">
+
+	<aura:attribute name="data" type="object" />
+	<aura:attribute name="done" type="boolean" default="false" />
+
+	<c:LightningErrorHandler aura:id="leh"/>
+
+	<aura:handler event="ltng:sendMessage" action="{!c.doInit}"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<aura:if isTrue="{!v.data.available}">
+		<lightning:card >
+			<aura:set attribute="title">
+				{!v.data.totalLabels} Labels ({!v.data.totalExamples} total examples)
+			</aura:set>
+
+			<table class="slds-table slds-table--bordered slds-table--cell-buffer slds-table_fixed-layout">
+				<thead>
+					<tr class="slds-text-title--caps">
+						<th scope="col">
+							<div class="slds-truncate" title="ID">ID</div>
+						</th>
+						<th scope="col">
+							<div class="slds-truncate" title="Name">Name</div>
+						</th>
+						<th scope="col">
+							<div class="slds-truncate" title="Examples">Examples</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<aura:iteration items="{!v.data.labelSummary.labels}" var="label">
+						<tr>
+							<td><div class="slds-truncate">{!label.id}</div></td>
+							<td>{!label.name}</td>
+							<td>
+								<div class="slds-truncate">
+									{!label.numExamples}
+								</div>
+							</td>
+						</tr>
+					</aura:iteration>
+				</tbody>
+			</table>
+		</lightning:card>
+	</aura:if>
+
+	<aura:if isTrue="{!and(v.data, and(!v.data.statusMsg, !v.data.labelSummary.labels.length>0))}">
+			<div class="slds-box slds-theme_shade">
+				<p class="slds-text-heading_medium slds-text-color_error">No Labels available for this model: {!v.data.statusMsg}</p>
+			</div>
+	</aura:if>
+
+	<aura:if isTrue="{!and(v.data, and(v.data.statusMsg, !v.data.labelSummary.labels.length>0))}">
+			<div class="slds-box slds-theme_shade">
+				<p class="slds-text-heading_medium slds-text-color_error"><p>Labels</p> {!v.data.statusMsg}</p>
+			</div>
+	</aura:if>
+
+	<aura:if isTrue="{!!v.done}">
+		<div class="spinner">
+			<lightning:spinner aura:id="spinner" />
+		</div>
+	</aura:if>
+
+</aura:component>

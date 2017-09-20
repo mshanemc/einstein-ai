@@ -4,7 +4,7 @@ system.debug(
 		'My questions is about electrical',
 		'Electrical',
 		'2RXZRP2VQRJZU4A2LZAM56K2DA',
-		Vision.getAccessToken())
+		einsteinUtilities.getAccessToken())
 );
 
 //typical error:

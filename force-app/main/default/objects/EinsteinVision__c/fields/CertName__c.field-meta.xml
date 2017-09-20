@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CertName__c</fullName>
+    <description>the Salesforce name of your security certificate.  (PKS method)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>the Salesforce name of your security certificate.  Use this if you signed up for Einstein very early and have an Einstein-related security certificate in Setup>Security>Certificate and Key Management</inlineHelpText>
+    <label>CertName</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

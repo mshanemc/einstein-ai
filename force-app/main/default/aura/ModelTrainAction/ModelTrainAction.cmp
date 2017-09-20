@@ -1,0 +1,36 @@
+<aura:component implements="force:hasRecordId,force:lightningQuickAction" controller="Vision">
+
+	<aura:attribute name="epochs" type="integer"/>
+	<aura:attribute name="retrain" type="boolean" default="false"/>
+	<aura:attribute name="fieldsv" type="object" />
+	<aura:attribute name="hasDatasetId" type="boolean" default="false"/>
+	<aura:attribute name="hasModelId" type="boolean" default="false" />
+
+	<force:recordData aura:id="frdv" targetFields="{!v.fieldsv}" recordId="{!v.recordId}" mode="VIEW" layoutType="FULL" recordUpdated="{!c.setDefaultRetrain}"/>
+
+	<c:LightningErrorHandler aura:id="leh"/>
+
+	<aura:if isTrue="{!v.hasDatasetId}">
+		<p class="slds-text-heading--medium slds-m-bottom--medium">
+			Clicking <b>train</b> will start the model training. </p>
+		<p class="slds-text-heading--medium slds-m-bottom--medium">
+			This may take a while--the models list will automatically refresh itself
+		</p>
+
+		<!-- <div class="slds-text-body-regular">Once you train the model, you can no longer make examples.  You'll have to create a new model/dataset, new examples, and re-do the command line scripts</div> -->
+		<aura:if isTrue="{!v.hasModelId}">
+			<lightning:input type="checkbox" label="Retrain (keep Einstein ModelId)" name="retrain" class="slds-m-bottom--medium" checked="{!v.retrain}"/>
+		</aura:if>
+
+		<lightning:input type="number" name="epochs" label="Epochs (optional)" value="{!v.epochs}" max="100" min="1" />
+
+		<lightning:button variant="brand" label="Train" onclick="{!c.trainThis}" class="slds-m-vertical_medium" />
+
+		<aura:set attribute="else">
+			<div class="slds-text-body-regular">You can't train a model until you've got a dataset created.  To use an existing dataset, set the Einstein Dataset Id (not the modelId)</div>
+		</aura:set>
+	</aura:if>
+
+
+
+</aura:component>

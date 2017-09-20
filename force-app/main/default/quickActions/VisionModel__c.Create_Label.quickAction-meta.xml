@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Create a label for this dataset/model</description>
+    <fieldOverrides>
+        <field>Model__c</field>
+        <formula>VisionModel__c.Id</formula>
+    </fieldOverrides>
+    <label>Create Label</label>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
+    <quickActionLayout>
+        <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
+        <quickActionLayoutColumns>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>Name</field>
+                <uiBehavior>Required</uiBehavior>
+            </quickActionLayoutItems>
+        </quickActionLayoutColumns>
+        <quickActionLayoutColumns/>
+    </quickActionLayout>
+    <successMessage>Label Created!  It\&apos;s under \&quot;Related\&quot; now</successMessage>
+    <targetObject>Label__c</targetObject>
+    <targetParentField>Model__c</targetParentField>
+    <type>Create</type>
+</QuickAction>

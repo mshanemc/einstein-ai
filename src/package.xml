@@ -11,6 +11,7 @@
         <members>StreamerCtrlTest</members>
         <members>Vision</members>
         <members>VisionUnitTesting</members>
+        <members>einsteinUtilities</members>
         <name>ApexClass</name>
     </types>
     <types>
