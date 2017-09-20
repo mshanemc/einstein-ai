@@ -16,6 +16,9 @@ public with sharing class EinsteinLanguage {
 
 	public class LanguageException extends exception {}
 
+	/*
+	Queries the list of objects in the org that a dataset can be built from
+	*/
 	@AuraEnabled
 	public static string getObjectOptions(){
 
@@ -40,6 +43,9 @@ public with sharing class EinsteinLanguage {
 		return JSON.serialize(output);
 	}
 
+	/*
+	For the given record Id, return the attachments that can be used to build a dataset
+	*/
 	@AuraEnabled
 	public static string getFileOptions(id recordId){
 		return JSON.serialize(
@@ -47,6 +53,7 @@ public with sharing class EinsteinLanguage {
 		);
 	}
 
+	/*for a given object, return the fields that are sources of text (string, textarea) or labels (picklist, boolean)*/
 	@AuraEnabled
 	public static string getObjectFields(string objectName, string sourceOrLabel){
 		list<string> temp = new list<string>();
@@ -80,11 +87,13 @@ public with sharing class EinsteinLanguage {
 		return JSON.serialize(output);
 	}
 
+	//future wrapper for dataset creation method
 	@future(callout=true)
 	public static void createDatasetFuture(string SFDCmodelId, string CDID){
 		createDatasetPart2(SFDCmodelId, CDID);
 	}
 
+	//deletes a model.  Called by a delete trigger on the model object.  Keeps your Einstein clean!
 	@future(Callout=True)
 	public static void deleteModel (string modelId, string access_token){
 	  httpRequest req = Vision.standard(access_token, DATASET + '/' + modelId, 'DELETE');
@@ -92,6 +101,11 @@ public with sharing class EinsteinLanguage {
 	  HTTPResponse res = http.send(req);
 	}
 
+	/*
+	data set creation
+	 - part 1 creates the csv file
+	 - part 2 puts it as an accessible url and sends that to Einstein
+	*/
 	@AuraEnabled
 	public static string createDatasetPart2(string SFDCmodelId, string CDID){
 
@@ -111,10 +125,8 @@ public with sharing class EinsteinLanguage {
 		params.put('name', LM.Name);
 		system.debug(params);
 
-		//https://requestb.in/1e8a66d1
 
 		httpRequest req = Vision.standardRequest(null, params, DATASET+ '/upload');
-		//httpRequest req = Vision.standardRequest(null, params, 'https://requestb.in/1e8a66d1');
 		req.setHeader('Connection', 'keep-alive');
 		system.debug(req);
 
@@ -223,7 +235,6 @@ public with sharing class EinsteinLanguage {
 		map<string, string> params = new map<string, string>();
 
 		params.put('modelId', EncodingUtil.urlEncode(modelId, 'UTF-8'));
-		//params.put('document', EncodingUtil.urlEncode(text, 'UTF-8'));
 		params.put('document', text);
 		params.put('expectedLabel', EncodingUtil.urlEncode(label, 'UTF-8'));
 
@@ -234,26 +245,7 @@ public with sharing class EinsteinLanguage {
 		return Vision.requestResponse(req);
 	}
 
-	public static list<Vision.Prediction> Predict (string text){
-		return Predict(text, null, null, null);
-	}
-
-	public static list<Vision.Prediction> Intent (string text, string modelId){
-		return Predict(text, 'Intent', modelId, null);
-	}
-
-	public static list<Vision.Prediction> Sentiment (string text){
-		return Predict(text, 'Sentiment', null, null);
-	}
-
-	public static list<Vision.Prediction> Sentiment (string text, string modelId){
-		return Predict(text, 'Sentiment', modelId, null);
-	}
-
-	public static list<Vision.Prediction> Predict (string text, string modelType, string modelId){
-		return Predict(text, modelType, modelId, null);
-	}
-
+	//Primary Predict method for Language
 	public static list<Vision.Prediction> Predict (string text, string modelType, string modelId, string access_token){
 		string endpoint;
 
@@ -279,15 +271,11 @@ public with sharing class EinsteinLanguage {
 		map<string, string> params = new map<string, string>();
 
 		params.put('modelId', EncodingUtil.urlEncode(modelId, 'UTF-8'));
-		//params.put('document', EncodingUtil.urlEncode(text, 'UTF-8'));
 		params.put('document', text);
 
 		system.debug(params);
 
 		httpRequest req = Vision.standardRequest(access_token, params, endpoint);
-	  //httpRequest req = Vision.standardRequest(access_token, params, 'https://requestb.in/uz03lruz');
-
-
 
 	  req.setHeader('Connection', 'keep-alive');
 
@@ -322,6 +310,29 @@ public with sharing class EinsteinLanguage {
   	return predictions;
 	}
 
+	//shorthand methods for Predict
+	public static list<Vision.Prediction> Predict (string text){
+		return Predict(text, null, null, null);
+	}
+
+	public static list<Vision.Prediction> Intent (string text, string modelId){
+		return Predict(text, 'Intent', modelId, null);
+	}
+
+	public static list<Vision.Prediction> Sentiment (string text){
+		return Predict(text, 'Sentiment', null, null);
+	}
+
+	public static list<Vision.Prediction> Sentiment (string text, string modelId){
+		return Predict(text, 'Sentiment', modelId, null);
+	}
+
+	public static list<Vision.Prediction> Predict (string text, string modelType, string modelId){
+		return Predict(text, modelType, modelId, null);
+	}
+
+
+	// for a given dataset, get the labels for displaying label/example quantity
 	@AuraEnabled
 	public static string getLabels(id recordId){
 	  Language_Model__c lm = [select Einstein_Dataset_Id__c from Language_Model__c where id=:recordId];
@@ -331,16 +342,5 @@ public with sharing class EinsteinLanguage {
 	  system.debug(res.getBody());
 	  return res.getBody();
 	}
-	//statistical display section
-	/*@AuraEnabled
-	public static string getAllModels(string recordId){
-	  string output;
-	  Language_Model__c lm = [select Einstein_Dataset_Id__c from Language_Model__c where id=:recordId];
-	  httpRequest req = vision.standard(null, DATASET + '/' + lm.Einstein_Dataset_Id__c + '/models', 'GET');
-	  Http http = new Http();
-	  HTTPResponse res = http.send(req);
-	  output =  res.getBody();
-	  system.debug(output);
-	  return output;
-	}*/
+
 }
